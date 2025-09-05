@@ -1,0 +1,9 @@
+{
+    "welcome": "Welcome to our Platform",
+    "description": "A scalable solution built with Next.js and TypeScript",
+    "notFound": {
+        "title": "404 - Page Not Found",
+        "description": "The page you're looking for doesn't exist.",
+        "backToHome": "Go to Home"
+    }
+}
