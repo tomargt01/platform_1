@@ -3,13 +3,21 @@ A modern, scalable frontend for a SaaS ERP platform built with Next.js, TypeScri
 Features
 
 Framework: Next.js 14.2.0 with App Router,
+
 Type Safety: TypeScript for strict typing,
+
 Styling: Tailwind CSS with Radix UI components,
+
 State Management: Zustand for global state, React Query for API data,
+
 Forms: React Hook Form with Zod validation,
+
 Internationalization: Multi-language support with react-i18next,
+
 Monitoring: Vercel Analytics and Sentry for error tracking,
+
 Documentation: Docusaurus for component and API documentation,
+
 Code Quality: ESLint, Prettier, and Husky for linting and formatting.
 
 Prerequisites
@@ -20,7 +28,7 @@ Git
 
 Installation
 
-Clone the repository:git clone <https://github.com/tomargt01/platform.git>
+Clone the repository:git clone <https://github.com/tomargt01/platform_1.git>
 cd saas-erp-platform
 
 
@@ -81,4 +89,5 @@ Push to the branch (git push origin feature/YourFeature).
 Open a pull request.
 
 License
+
 This project is licensed under the MIT License.
