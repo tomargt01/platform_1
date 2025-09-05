@@ -1,0 +1,52 @@
+npm install --verbose 
+
+// git remote set-url origin git@github-new:tomargt01/platform.git   
+
+###############################################################################################################
+
+https://chatgpt.com/c/68b9664c-3ee0-8330-8991-537d2bf5cd22
+
+@vercel/analytics - quick overview, realtime traffic [ kitne log site use kar rahe ]
+
+sentry/nextjs - React/Next.js UI me jo bhi crash/error hoga wo track karega [ Site me kaha problem aa rahi hai (errors + performance) ]
+
+web-vitals - user side performance (load time, click response, layout stability) track karega
+
+react-helmet-async - SEO aur page metadata manage karna
+
+Docusaurus - for Frontend Documentation
+
+@next/bundle-analyzer to monitor bundle size
+
+Husky and Lint-Staged:
+
+You edit a file → save.
+You stage (git add) and commit.
+Husky triggers → calls Lint-Staged.
+Lint-Staged runs Prettier/ESLint only on the changed files.
+If issues found → commit is blocked until fixed.
+✅ Final result: clean, consistent, error-free code in Git.
+
+eslint-plugin-jsx-a11y = Makes UI accessible.
+
+eslint-plugin-import = Keeps imports clean & bug-free.
+
+
+###############################################################################################################
+
+https://grok.com/c/c954779c-ada6-4d03-9ce5-b67acb8b7ba7
+
+Here’s the priority order for configuring files, as established previously:
+
+.gitignore (done, content added and verified by you)
+.husky/pre-commit (next, to set up the Husky hook)
+vercel.json
+.vercelignore
+README.md
+.eslintrc.json
+.prettierrc
+tsconfig.json
+jest.config.js
+docusaurus.config.js
+next.config.js
+.env.local

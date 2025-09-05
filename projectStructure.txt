@@ -1,0 +1,278 @@
+.
+├── .env.example
+├── .env.local
+├── .eslintrc.json
+├── .github
+│   └── workflows
+│       ├── ci.yml
+│       └── deploy.yml
+├── .gitignore
+├── .prettierrc
+├── .vscode
+│   ├── extensions.json
+│   ├── settings.json
+│   └── tasks.json
+├── components.json
+├── docs
+│   ├── API.md
+│   ├── DEPLOYMENT.md
+│   ├── README.md
+│   └── SETUP.md
+├── next.config.js
+├── package.json
+├── projectStructure.txt
+├── public
+│   ├── favicon.ico
+│   ├── icons
+│   │   └── .gitkeep
+│   ├── images
+│   │   └── .gitkeep
+│   └── logos
+│       └── .gitkeep
+├── README.md
+├── src
+│   ├── app
+│   │   ├── (auth)
+│   │   │   ├── forgot-password
+│   │   │   ├── login
+│   │   │   └── register
+│   │   ├── (dashboard)
+│   │   │   ├── accounting
+│   │   │   │   ├── expenses
+│   │   │   │   └── invoices
+│   │   │   ├── dashboard
+│   │   │   ├── hr
+│   │   │   │   ├── attendance
+│   │   │   │   └── employees
+│   │   │   ├── inventory
+│   │   │   │   ├── categories
+│   │   │   │   └── products
+│   │   │   ├── reports
+│   │   │   └── settings
+│   │   ├── api
+│   │   │   ├── accounting
+│   │   │   │   ├── expenses
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── invoices
+│   │   │   │       └── route.ts
+│   │   │   ├── auth
+│   │   │   │   ├── login
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── logout
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── register
+│   │   │   │       └── route.ts
+│   │   │   ├── hr
+│   │   │   │   ├── attendance
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── employees
+│   │   │   │       └── route.ts
+│   │   │   ├── inventory
+│   │   │   │   ├── categories
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── products
+│   │   │   │       └── route.ts
+│   │   │   └── reports
+│   │   │       └── route.ts
+│   │   ├── error.tsx
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   ├── loading.tsx
+│   │   ├── not-found.tsx
+│   │   └── page.tsx
+│   ├── components
+│   │   ├── charts
+│   │   │   ├── AreaChart.tsx
+│   │   │   ├── BarChart.tsx
+│   │   │   ├── index.ts
+│   │   │   ├── LineChart.tsx
+│   │   │   └── PieChart.tsx
+│   │   ├── common
+│   │   │   ├── ConfirmDialog.tsx
+│   │   │   ├── DataTable.tsx
+│   │   │   ├── ErrorBoundary.tsx
+│   │   │   ├── FileUpload.tsx
+│   │   │   ├── index.ts
+│   │   │   ├── LoadingSpinner.tsx
+│   │   │   └── SearchBar.tsx
+│   │   ├── features
+│   │   │   ├── accounting
+│   │   │   │   ├── ExpenseTracker.tsx
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── InvoiceCard.tsx
+│   │   │   │   ├── InvoiceList.tsx
+│   │   │   │   └── PaymentStatus.tsx
+│   │   │   ├── dashboard
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── QuickActions.tsx
+│   │   │   │   ├── RecentActivity.tsx
+│   │   │   │   └── StatsCard.tsx
+│   │   │   ├── hr
+│   │   │   │   ├── AttendanceTracker.tsx
+│   │   │   │   ├── EmployeeCard.tsx
+│   │   │   │   ├── EmployeeList.tsx
+│   │   │   │   ├── index.ts
+│   │   │   │   └── LeaveTracker.tsx
+│   │   │   ├── index.ts
+│   │   │   ├── inventory
+│   │   │   │   ├── CategoryList.tsx
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── ProductCard.tsx
+│   │   │   │   ├── ProductList.tsx
+│   │   │   │   └── StockAlert.tsx
+│   │   │   └── reports
+│   │   │       ├── ExportOptions.tsx
+│   │   │       ├── index.ts
+│   │   │       ├── ReportBuilder.tsx
+│   │   │       └── ReportViewer.tsx
+│   │   ├── forms
+│   │   │   ├── accounting
+│   │   │   │   ├── ExpenseForm.tsx
+│   │   │   │   ├── index.ts
+│   │   │   │   └── InvoiceForm.tsx
+│   │   │   ├── auth
+│   │   │   │   ├── ForgotPasswordForm.tsx
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── LoginForm.tsx
+│   │   │   │   └── RegisterForm.tsx
+│   │   │   ├── common
+│   │   │   │   ├── FormError.tsx
+│   │   │   │   ├── FormField.tsx
+│   │   │   │   ├── FormWrapper.tsx
+│   │   │   │   └── index.ts
+│   │   │   ├── hr
+│   │   │   │   ├── AttendanceForm.tsx
+│   │   │   │   ├── EmployeeForm.tsx
+│   │   │   │   └── index.ts
+│   │   │   ├── index.ts
+│   │   │   └── inventory
+│   │   │       ├── CategoryForm.tsx
+│   │   │       ├── index.ts
+│   │   │       └── ProductForm.tsx
+│   │   ├── layout
+│   │   │   ├── breadcrumb
+│   │   │   │   ├── Breadcrumb.tsx
+│   │   │   │   └── index.ts
+│   │   │   ├── footer
+│   │   │   │   ├── Footer.tsx
+│   │   │   │   └── index.ts
+│   │   │   ├── header
+│   │   │   │   ├── Header.tsx
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── NotificationBell.tsx
+│   │   │   │   └── UserMenu.tsx
+│   │   │   ├── index.ts
+│   │   │   └── sidebar
+│   │   │       ├── index.ts
+│   │   │       ├── Sidebar.tsx
+│   │   │       ├── SidebarGroup.tsx
+│   │   │       └── SidebarItem.tsx
+│   │   ├── providers
+│   │   │   ├── AuthProvider.tsx
+│   │   │   ├── index.ts
+│   │   │   ├── QueryProvider.tsx
+│   │   │   ├── ThemeProvider.tsx
+│   │   │   └── ToastProvider.tsx
+│   │   └── ui
+│   │       ├── alert.tsx
+│   │       ├── badge.tsx
+│   │       ├── button.tsx
+│   │       ├── calendar.tsx
+│   │       ├── card.tsx
+│   │       ├── checkbox.tsx
+│   │       ├── date-picker.tsx
+│   │       ├── dialog.tsx
+│   │       ├── dropdown-menu.tsx
+│   │       ├── index.ts
+│   │       ├── input.tsx
+│   │       ├── label.tsx
+│   │       ├── pagination.tsx
+│   │       ├── progress.tsx
+│   │       ├── radio-group.tsx
+│   │       ├── select.tsx
+│   │       ├── skeleton.tsx
+│   │       ├── spinner.tsx
+│   │       ├── switch.tsx
+│   │       ├── table.tsx
+│   │       ├── tabs.tsx
+│   │       ├── textarea.tsx
+│   │       ├── toast.tsx
+│   │       └── tooltip.tsx
+│   ├── lib
+│   │   ├── api
+│   │   │   ├── accounting.ts
+│   │   │   ├── auth.ts
+│   │   │   ├── client.ts
+│   │   │   ├── endpoints.ts
+│   │   │   ├── hr.ts
+│   │   │   ├── index.ts
+│   │   │   ├── inventory.ts
+│   │   │   └── reports.ts
+│   │   ├── auth
+│   │   │   ├── auth.ts
+│   │   │   ├── index.ts
+│   │   │   ├── permissions.ts
+│   │   │   └── session.ts
+│   │   ├── db
+│   │   │   ├── connection.ts
+│   │   │   ├── index.ts
+│   │   │   └── queries.ts
+│   │   ├── hooks
+│   │   │   ├── index.ts
+│   │   │   ├── use-api.ts
+│   │   │   ├── use-auth.ts
+│   │   │   ├── use-debounce.ts
+│   │   │   ├── use-local-storage.ts
+│   │   │   ├── use-modal.ts
+│   │   │   ├── use-pagination.ts
+│   │   │   ├── use-search.ts
+│   │   │   └── use-toast.ts
+│   │   ├── schemas
+│   │   │   ├── accounting.ts
+│   │   │   ├── auth.ts
+│   │   │   ├── common.ts
+│   │   │   ├── hr.ts
+│   │   │   ├── index.ts
+│   │   │   └── inventory.ts
+│   │   ├── store
+│   │   │   ├── accounting-store.ts
+│   │   │   ├── auth-store.ts
+│   │   │   ├── hr-store.ts
+│   │   │   ├── index.ts
+│   │   │   ├── inventory-store.ts
+│   │   │   └── ui-store.ts
+│   │   ├── types
+│   │   │   ├── accounting.ts
+│   │   │   ├── api.ts
+│   │   │   ├── auth.ts
+│   │   │   ├── common.ts
+│   │   │   ├── hr.ts
+│   │   │   ├── index.ts
+│   │   │   ├── inventory.ts
+│   │   │   └── reports.ts
+│   │   └── utils
+│   │       ├── calculations.ts
+│   │       ├── cn.ts
+│   │       ├── constants.ts
+│   │       ├── export.ts
+│   │       ├── formatters.ts
+│   │       ├── index.ts
+│   │       └── validators.ts
+│   └── styles
+│       ├── components.css
+│       └── globals.css
+├── tailwind.config.ts
+├── tests
+│   ├── __mocks__
+│   │   └── .gitkeep
+│   ├── api
+│   │   └── .gitkeep
+│   ├── components
+│   │   └── .gitkeep
+│   ├── jest.config.js
+│   ├── setup.ts
+│   └── utils
+│       └── .gitkeep
+└── tsconfig.json
+
+80 directories, 196 files

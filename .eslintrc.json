@@ -1,0 +1,51 @@
+{
+    "extends": [
+        "next/core-web-vitals",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:jsx-a11y/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
+        "plugin:react-hooks/recommended",
+        "plugin:security/recommended",
+        "prettier"
+    ],
+    
+    "plugins": [
+        "@typescript-eslint",
+        "jsx-a11y",
+        "import",
+        "react-hooks",
+        "security"
+    ],
+    "rules": {
+        // SAAS specific security rules
+        "security/detect-object-injection": "warn",
+        "security/detect-non-literal-regexp": "warn",
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/prefer-nullish-coalescing": "error",
+        "@typescript-eslint/prefer-optional-chain": "error",
+        // Import organization for large codebase
+        "import/order": [
+            "error",
+            {
+                "groups": [
+                    "builtin",
+                    "external",
+                    "internal",
+                    [
+                        "parent",
+                        "sibling"
+                    ],
+                    "index"
+                ],
+                "newlines-between": "always",
+                "pathGroups": [
+                    {
+                        "pattern": "@/**",
+                        "group": "internal"
+                    }
+                ]
+            }
+        ]
+    }
+}
