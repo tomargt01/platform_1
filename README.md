@@ -2,15 +2,15 @@ SaaS ERP Platform (Frontend)
 A modern, scalable frontend for a SaaS ERP platform built with Next.js, TypeScript, Tailwind CSS, and React. This project provides a responsive, multi-language user interface with theme switching, API integration, and robust error tracking.
 Features
 
-Framework: Next.js 14.2.0 with App Router
-Type Safety: TypeScript for strict typing
-Styling: Tailwind CSS with Radix UI components
-State Management: Zustand for global state, React Query for API data
-Forms: React Hook Form with Zod validation
-Internationalization: Multi-language support with react-i18next
-Monitoring: Vercel Analytics and Sentry for error tracking
-Documentation: Docusaurus for component and API documentation
-Code Quality: ESLint, Prettier, and Husky for linting and formatting
+Framework: Next.js 14.2.0 with App Router,
+Type Safety: TypeScript for strict typing,
+Styling: Tailwind CSS with Radix UI components,
+State Management: Zustand for global state, React Query for API data,
+Forms: React Hook Form with Zod validation,
+Internationalization: Multi-language support with react-i18next,
+Monitoring: Vercel Analytics and Sentry for error tracking,
+Documentation: Docusaurus for component and API documentation,
+Code Quality: ESLint, Prettier, and Husky for linting and formatting.
 
 Prerequisites
 
