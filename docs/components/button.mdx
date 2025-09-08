@@ -1,0 +1,52 @@
+---
+id: button
+title: Button Component
+---
+
+import { Button } from '../../src/components/ui/Button';
+import { ArrowRight } from 'lucide-react';
+
+# Button Component
+
+The `Button` component is a versatile UI element with customizable intents, sizes, themes, and icons.
+
+## Usage
+
+```jsx
+<Button intent="primary" size="md" theme="light">
+  Primary Button
+</Button>
+
+Examples
+Primary Button
+<button intent="primary" size="md" theme="light">
+  Primary Button
+</button>
+Disabled Button
+<button disabled>
+  Disabled Button
+</button>
+Loading Button
+<button loading="">
+  Loading Button
+</button>
+Button with Left Icon
+<button lefticon="{ArrowRight}">
+  Button with Left Icon
+</button>
+Button with Right Icon
+<button righticon="{ArrowRight}">
+  Button with Right Icon
+</button>
+Props
+
+
+Prop,Type,Description,Default
+intent,primary | secondary | ghost | destructive,Button style variant,primary
+size,sm | md | lg,Button size,md
+theme,light | dark | purple | green | blue,Button color theme,light
+leftIcon,LucideIcon,Icon to display on the left,-
+rightIcon,LucideIcon,Icon to display on the right,-
+loading,boolean,Shows a loading spinner,false
+disabled,boolean,Disables the button,false
+children,ReactNode,Button content,-

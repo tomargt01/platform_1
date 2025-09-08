@@ -3,51 +3,70 @@
 @tailwind utilities;
 
 :root[data-theme='light'] {
-    --background: theme('colors.light.background');
-    --text: theme('colors.light.text');
-    --primary: theme('colors.light.primary');
-    --secondary: theme('colors.light.secondary');
-    --accent: theme('colors.light.accent');
+    --background: #ffffff;
+    --text: #1f2937;
+    --primary: #3b82f6;
+    /* Tailwind's blue-500 */
+    --secondary: #e5e7eb;
+    /* Tailwind's gray-200 */
+    --accent: #2563eb;
+    /* Tailwind's blue-600 */
 }
 
 :root[data-theme='dark'] {
-    --background: theme('colors.dark.background');
-    --text: theme('colors.dark.text');
-    --primary: theme('colors.dark.primary');
-    --secondary: theme('colors.dark.secondary');
-    --accent: theme('colors.dark.accent');
+    --background: #1f2937;
+    /* Tailwind's gray-800 */
+    --text: #f9fafb;
+    --primary: #1d4ed8;
+    /* Tailwind's blue-700 */
+    --secondary: #4b5563;
+    /* Tailwind's gray-600 */
+    --accent: #3b82f6;
+    /* Tailwind's blue-500 */
 }
 
 :root[data-theme='purple'] {
-    --background: theme('colors.purple.background');
-    --text: theme('colors.purple.text');
-    --primary: theme('colors.purple.primary');
-    --secondary: theme('colors.purple.secondary');
-    --accent: theme('colors.purple.accent');
+    --background: #f5f3ff;
+    --text: #4c1d95;
+    --primary: #8b5cf6;
+    /* Tailwind's purple-500 */
+    --secondary: #ede9fe;
+    /* Tailwind's purple-100 */
+    --accent: #7c3aed;
+    /* Tailwind's purple-600 */
 }
 
 :root[data-theme='pink'] {
-    --background: theme('colors.pink.background');
-    --text: theme('colors.pink.text');
-    --primary: theme('colors.pink.primary');
-    --secondary: theme('colors.pink.secondary');
-    --accent: theme('colors.pink.accent');
+    --background: #fdf2f8;
+    --text: #831843;
+    --primary: #ec4899;
+    /* Tailwind's pink-500 */
+    --secondary: #fce7f3;
+    /* Tailwind's pink-100 */
+    --accent: #db2777;
+    /* Tailwind's pink-600 */
 }
 
 :root[data-theme='green'] {
-    --background: theme('colors.green.background');
-    --text: theme('colors.green.text');
-    --primary: theme('colors.green.primary');
-    --secondary: theme('colors.green.secondary');
-    --accent: theme('colors.green.accent');
+    --background: #ecfdf5;
+    --text: #064e3b;
+    --primary: #10b981;
+    /* Tailwind's green-500 */
+    --secondary: #d1fae5;
+    /* Tailwind's green-100 */
+    --accent: #059669;
+    /* Tailwind's green-600 */
 }
 
 :root[data-theme='blue'] {
-    --background: theme('colors.blue.background');
-    --text: theme('colors.blue.text');
-    --primary: theme('colors.blue.primary');
-    --secondary: theme('colors.blue.secondary');
-    --accent: theme('colors.blue.accent');
+    --background: #eff6ff;
+    --text: #1e40af;
+    --primary: #3b82f6;
+    /* Tailwind's blue-500 */
+    --secondary: #dbeafe;
+    /* Tailwind's blue-100 */
+    --accent: #2563eb;
+    /* Tailwind's blue-600 */
 }
 
 * {
@@ -57,15 +76,4 @@
 body {
     background-color: var(--background);
     color: var(--text);
-}
-
-button,
-a.button {
-    background-color: var(--primary);
-    color: var(--text);
-}
-
-button:hover,
-a.button:hover {
-    background-color: var(--accent);
 }
