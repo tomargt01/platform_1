@@ -3,22 +3,28 @@
 import '../styles/globals.css';
 import { Inter } from 'next/font/google';
 import I18nProvider from './I18nProvider';
-import { Suspense } from 'react';
-
-import * as Sentry from "@sentry/nextjs";
-import { cookies } from "next/headers";
+import { Suspense, useEffect } from 'react';
+import { useThemeStore } from '#/lib/hooks/useThemeStore';
+import { getValidTheme } from '#/lib/utils/themeUtils';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+    const { theme, setTheme } = useThemeStore();
 
-    const user = { id: '123', email: 'user@example.com' }; // Replace with actual user logic
-    if (user) {
-        Sentry.setUser({ id: user.id, email: user.email });
-    }
+    useEffect(() => {
+        const storedTheme = localStorage.getItem('theme-storage');
+        const initialTheme = getValidTheme(storedTheme);
+        setTheme(initialTheme);
+        document.documentElement.setAttribute('data-theme', initialTheme);
+    }, [setTheme]);
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+    }, [theme]);
 
     return (
-        <html lang="en">
+        <html lang="en" data-theme={theme}>
             <body className={inter.className}>
                 <Suspense fallback={<div>Loading...</div>}>
                     <I18nProvider>{children}</I18nProvider>

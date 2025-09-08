@@ -1,3 +1,71 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root[data-theme='light'] {
+    --background: theme('colors.light.background');
+    --text: theme('colors.light.text');
+    --primary: theme('colors.light.primary');
+    --secondary: theme('colors.light.secondary');
+    --accent: theme('colors.light.accent');
+}
+
+:root[data-theme='dark'] {
+    --background: theme('colors.dark.background');
+    --text: theme('colors.dark.text');
+    --primary: theme('colors.dark.primary');
+    --secondary: theme('colors.dark.secondary');
+    --accent: theme('colors.dark.accent');
+}
+
+:root[data-theme='purple'] {
+    --background: theme('colors.purple.background');
+    --text: theme('colors.purple.text');
+    --primary: theme('colors.purple.primary');
+    --secondary: theme('colors.purple.secondary');
+    --accent: theme('colors.purple.accent');
+}
+
+:root[data-theme='pink'] {
+    --background: theme('colors.pink.background');
+    --text: theme('colors.pink.text');
+    --primary: theme('colors.pink.primary');
+    --secondary: theme('colors.pink.secondary');
+    --accent: theme('colors.pink.accent');
+}
+
+:root[data-theme='green'] {
+    --background: theme('colors.green.background');
+    --text: theme('colors.green.text');
+    --primary: theme('colors.green.primary');
+    --secondary: theme('colors.green.secondary');
+    --accent: theme('colors.green.accent');
+}
+
+:root[data-theme='blue'] {
+    --background: theme('colors.blue.background');
+    --text: theme('colors.blue.text');
+    --primary: theme('colors.blue.primary');
+    --secondary: theme('colors.blue.secondary');
+    --accent: theme('colors.blue.accent');
+}
+
+* {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+}
+
+button,
+a.button {
+    background-color: var(--primary);
+    color: var(--text);
+}
+
+button:hover,
+a.button:hover {
+    background-color: var(--accent);
+}

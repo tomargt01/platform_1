@@ -2,8 +2,17 @@
     "welcome": "Welcome to our Platform",
     "description": "A scalable solution built with Next.js and TypeScript",
     "notFound": {
-        "title": "404 - Page Not Found",
-        "description": "The page you're looking for doesn't exist.",
-        "backToHome": "Go to Home"
+        "title": "Page Not Found",
+        "description": "The page you are looking for does not exist.",
+        "backToHome": "Back to Home"
+    },
+    "theme": "Theme",
+    "themes": {
+        "light": "Light",
+        "dark": "Dark",
+        "purple": "Purple",
+        "pink": "Pink",
+        "green": "Green",
+        "blue": "Blue"
     }
 }
