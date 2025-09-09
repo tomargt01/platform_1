@@ -77,3 +77,19 @@ body {
     background-color: var(--background);
     color: var(--text);
 }
+
+[data-intent="primary"]:focus {
+    border-color: #3b82f6 !important;
+}
+
+[data-intent="secondary"]:focus {
+    border-color: #9ca3af !important;
+}
+
+[data-intent="destructive"]:focus {
+    border-color: #ef4444 !important;
+}
+
+[data-intent="ghost"]:focus {
+    border-color: #e5e5e5 !important;
+}
