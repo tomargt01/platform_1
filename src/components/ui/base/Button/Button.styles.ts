@@ -6,7 +6,7 @@ export const buttonVariants = cva(
     {
         variants: {
             intent: {
-                primary: "bg-[var(--primary)] text-[var(--text)] hover:bg-[var(--accent)]",
+                primary: "bg-[var(--primary)] text-white hover:bg-[var(--accent)]",
                 secondary: "bg-[var(--secondary)] text-[var(--text)] hover:bg-[var(--accent)]",
                 ghost: "bg-transparent hover:bg-[var(--accent)]/20 text-[var(--text)]",
                 destructive: "bg-red-500 text-white hover:bg-red-600",
