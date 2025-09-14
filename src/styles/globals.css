@@ -11,6 +11,7 @@
     /* Tailwind's gray-200 */
     --accent: #2563eb;
     /* Tailwind's blue-600 */
+    --lightBg: #ffffff;
 }
 
 :root[data-theme='dark'] {
@@ -23,6 +24,7 @@
     /* Tailwind's gray-600 */
     --accent: #3b82f6;
     /* Tailwind's blue-500 */
+    --lightBg: #1f2937;
 }
 
 :root[data-theme='purple'] {
@@ -34,6 +36,7 @@
     /* Tailwind's purple-100 */
     --accent: #7c3aed;
     /* Tailwind's purple-600 */
+    --lightBg: #ffffff;
 }
 
 :root[data-theme='pink'] {
@@ -45,6 +48,7 @@
     /* Tailwind's pink-100 */
     --accent: #db2777;
     /* Tailwind's pink-600 */
+    --lightBg: #ffffff;
 }
 
 :root[data-theme='green'] {
@@ -56,6 +60,7 @@
     /* Tailwind's green-100 */
     --accent: #059669;
     /* Tailwind's green-600 */
+    --lightBg: #ffffff;
 }
 
 :root[data-theme='blue'] {
@@ -67,6 +72,7 @@
     /* Tailwind's blue-100 */
     --accent: #2563eb;
     /* Tailwind's blue-600 */
+    --lightBg: #ffffff;
 }
 
 * {
