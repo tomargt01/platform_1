@@ -100,3 +100,27 @@ body {
 [data-intent="ghost"]:focus {
     border-color: #e5e5e5 !important;
 }
+
+
+/* DatePicker specific styles */
+.datepicker-day-selected {
+    background-color: var(--accent) !important;
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+.datepicker-day-current {
+    background-color: var(--secondary) !important;
+    color: var(--accent) !important;
+    font-weight: 500 !important;
+}
+
+.datepicker-day-hover:hover {
+    background-color: var(--secondary) !important;
+}
+
+/* Focus states for better accessibility */
+.datepicker-input:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2) !important;
+}

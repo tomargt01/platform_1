@@ -1,16 +1,27 @@
 "use client";
 import React, { useState } from "react";
-import { Checkbox, Theme } from "#/components/ui/base/CheckBox";
+import { DatePicker, DateRangePicker } from '#/components/ui/base/DatePicker';
+import { Checkbox } from "#/components/ui/base/CheckBox";
+import { Theme } from "#/lib/hooks/useThemeStore";
 
 const Dashboard = () => {
-    const [theme, setTheme] = useState<Theme>("blue"); // Test with blue theme
-    const [isChecked, setIsChecked] = useState(false);
-    const [isYChecked, setIsYChecked] = useState(false);
+
+    // Single Date Picker
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+    // Date Range Picker
+    const [dateRange, setDateRange] = useState<{ startDate: Date | null, endDate: Date | null }>({
+        startDate: null,
+        endDate: null
+    }); 
+    
+    const [theme, setTheme] = useState<Theme>("blue");
 
     const toggleTheme = (newTheme: Theme) => {
         setTheme(newTheme);
         document.documentElement.setAttribute("data-theme", newTheme);
     };
+
 
     return (
         <div className="p-4">
@@ -30,37 +41,33 @@ const Dashboard = () => {
                 )}
             </div>
 
-            <Checkbox
-                type="toggle"
-                intent="success"
+            {/* <DatePicker
+                value={selectedDate}
+                onChange={setSelectedDate}
+                theme="purple"
+                size="md"
+                label="Select Date"
+                customColors={{
+                    selectedDate: 'bg-purple-600 text-white',
+                    currentDate: 'bg-purple-100 text-purple-800'
+                }}
+            /> */}
+
+            <DatePicker
+                value={selectedDate}
+                onChange={setSelectedDate}
                 theme={theme}
-                label="Success Toggle (YES/NO)"
-                onChange={(e) => setIsYChecked(e.target.checked)}
-                checked={isYChecked}
-                onText="YES"
-                offText="NO"
+                size="md"
+                label="Select Date"
             />
 
-            <Checkbox
-                type="toggle"
-                intent="destructive"
+            <DateRangePicker
+                startDate={dateRange.startDate}
+                endDate={dateRange.endDate}
+                onChange={setDateRange}
                 theme={theme}
-                label="Destructive Toggle (✓/✕)"
-                onChange={(e) => setIsChecked(e.target.checked)}
-                checked={isChecked}
-                onText="✓"
-                offText="✕"
-            />
-
-            <Checkbox
-                type="toggle"
-                intent="white"
-                theme={theme}
-                label="White Toggle (ON/OFF)"
-                onChange={(e) => setIsChecked(e.target.checked)}
-                checked={isChecked}
-                onText="ON"
-                offText="OFF"
+                size="md"
+                label="Select Date Range"
             />
         </div>
     );
