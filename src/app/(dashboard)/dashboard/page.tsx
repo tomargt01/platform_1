@@ -1,353 +1,513 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import {
-    LinearProgress,
-    CircularProgress,
-    SemiCircularProgress,
-    DottedProgress,
-    StepProgress
-} from '#/components/ui/base/ProgressBar';
+import { useState } from 'react';
+import { AccordionItem, AccordionGroup } from '#/components/ui/base/Accordion';
+import { Card } from '#/components/ui/base/Card';
 import { Button } from '#/components/ui/base/Button';
-import { Play, Pause, RefreshCw } from 'lucide-react';
+import { Badge } from '#/components/ui/base/Badge';
+import {
+    Settings,
+    User,
+    Bell,
+    Shield,
+    CreditCard,
+    HelpCircle,
+    FileText,
+    Globe,
+    Zap,
+    Heart,
+    Star,
+    Bookmark
+} from 'lucide-react';
 
-const Dashboard = () => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
-
-    // Progress states for testing
-    const [progressValues, setProgressValues] = useState({
-        linear: 45,
-        circular: 68,
-        semiCircular: 85,
-        dotted: 70,
-        gradient: 30,
-        striped: 55,
-    });
-
-    const [isAnimating, setIsAnimating] = useState(false);
+const AccordionTestDashboard = () => {
     const [selectedTheme, setSelectedTheme] = useState<'light' | 'dark' | 'purple' | 'pink' | 'green' | 'blue'>('light');
+    const [selectedSize, setSelectedSize] = useState<'sm' | 'md' | 'lg'>('md');
+    const [selectedVariant, setSelectedVariant] = useState<'default' | 'bordered' | 'separated' | 'flush' | 'ghost'>('default');
+    const [allowMultiple, setAllowMultiple] = useState(false);
+    const [showIcons, setShowIcons] = useState(true);
 
-    // Step progress data
-    const [stepData, setStepData] = useState([
-        { label: "Planning", completed: true },
-        { label: "Development", completed: true },
-        { label: "Testing", active: true, completed: false },
-        { label: "Deployment", completed: false },
-        { label: "Launch", completed: false }
-    ]);
+    // Sample accordion data
+    const faqData = [
+        {
+            id: 'faq1',
+            title: 'What is your return policy?',
+            content: (
+                <div>
+                    <p>We offer a 30-day return policy for all items. Items must be in original condition with tags attached.</p>
+                    <ul className="mt-2 ml-4 list-disc">
+                        <li>Returns are processed within 5-7 business days</li>
+                        <li>Original shipping costs are non-refundable</li>
+                        <li>Customer is responsible for return shipping costs</li>
+                    </ul>
+                </div>
+            ),
+            defaultExpanded: true,
+        },
+        {
+            id: 'faq2',
+            title: 'How do I track my order?',
+            content: (
+                <div>
+                    <p>You can track your order using the tracking number provided in your confirmation email.</p>
+                    <div className="mt-3 p-3 bg-blue-50 rounded-md">
+                        <p className="text-sm text-blue-800">
+                            <strong>Pro tip:</strong> Create an account to view all your orders in one place!
+                        </p>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            id: 'faq3',
+            title: 'Do you offer international shipping?',
+            content: (
+                <div>
+                    <p>Yes! We ship to over 50 countries worldwide.</p>
+                    <div className="mt-3">
+                        <h4 className="font-semibold">Shipping times:</h4>
+                        <ul className="mt-1 ml-4 list-disc">
+                            <li>US & Canada: 3-5 business days</li>
+                            <li>Europe: 5-7 business days</li>
+                            <li>Asia & Australia: 7-10 business days</li>
+                            <li>Rest of world: 10-15 business days</li>
+                        </ul>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            id: 'faq4',
+            title: 'What payment methods do you accept?',
+            content: (
+                <div>
+                    <p>We accept all major payment methods:</p>
+                    <div className="grid grid-cols-2 gap-4 mt-3">
+                        <div>
+                            <h4 className="font-semibold">Credit Cards:</h4>
+                            <ul className="list-disc ml-4">
+                                <li>Visa</li>
+                                <li>Mastercard</li>
+                                <li>American Express</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="font-semibold">Digital Wallets:</h4>
+                            <ul className="list-disc ml-4">
+                                <li>PayPal</li>
+                                <li>Apple Pay</li>
+                                <li>Google Pay</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            id: 'faq5',
+            title: 'How can I contact customer support?',
+            content: (
+                <div>
+                    <p>We're here to help! Contact us through any of these methods:</p>
+                    <div className="mt-3 space-y-2">
+                        <div className="flex items-center">
+                            <Bell className="w-4 h-4 mr-2 text-blue-500" />
+                            <span>Email: support@example.com</span>
+                        </div>
+                        <div className="flex items-center">
+                            <Globe className="w-4 h-4 mr-2 text-green-500" />
+                            <span>Live Chat: Available 24/7</span>
+                        </div>
+                        <div className="flex items-center">
+                            <User className="w-4 h-4 mr-2 text-purple-500" />
+                            <span>Phone: 1-800-123-4567</span>
+                        </div>
+                    </div>
+                </div>
+            ),
+        },
+    ];
 
-    // Auto increment progress for demo
-    useEffect(() => {
-        let interval: NodeJS.Timeout;
-
-        if (isAnimating) {
-            interval = setInterval(() => {
-                setProgressValues(prev => ({
-                    linear: (prev.linear + 2) % 100,
-                    circular: (prev.circular + 1.5) % 100,
-                    semiCircular: (prev.semiCircular + 1.2) % 100,
-                    dotted: (prev.dotted + 1.8) % 100,
-                    gradient: (prev.gradient + 2.5) % 100,
-                    striped: (prev.striped + 1.3) % 100,
-                }));
-            }, 1000);
-        }
-
-        return () => clearInterval(interval);
-    }, [isAnimating]);
-
-    // Reset all progress values
-    const resetProgress = () => {
-        setProgressValues({
-            linear: Math.floor(Math.random() * 100),
-            circular: Math.floor(Math.random() * 100),
-            semiCircular: Math.floor(Math.random() * 100),
-            dotted: Math.floor(Math.random() * 100),
-            gradient: Math.floor(Math.random() * 100),
-            striped: Math.floor(Math.random() * 100),
-        });
-    };
-
-    // Toggle step completion
-    const toggleStep = (index: number) => {
-        setStepData(prev => prev.map((step, i) => {
-            if (i === index) {
-                return { ...step, completed: !step.completed, active: false };
-            } else if (i === index + 1 && !prev[index].completed) {
-                return { ...step, active: true };
-            }
-            return step;
-        }));
-    };
-
-    // Sample data for existing functionality
-    const data = [
-        { id: 1, name: "Sample Data 1" },
-        { id: 2, name: "Sample Data 2" },
-        { id: 3, name: "Sample Data 3" },
+    const settingsData = [
+        {
+            id: 'account',
+            title: 'Account Settings',
+            content: (
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Display Name</label>
+                        <input
+                            type="text"
+                            className="w-full p-2 border rounded-md"
+                            placeholder="Enter your display name"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Email Address</label>
+                        <input
+                            type="email"
+                            className="w-full p-2 border rounded-md"
+                            placeholder="your@email.com"
+                        />
+                    </div>
+                    <Button size="sm">Save Changes</Button>
+                </div>
+            ),
+        },
+        {
+            id: 'privacy',
+            title: 'Privacy & Security',
+            content: (
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                        <span>Two-factor Authentication</span>
+                        <Badge intent="secondary">Enabled</Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <span>Data Export</span>
+                        <Button intent="secondary" size="sm">Download</Button>
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <span>Account Deletion</span>
+                        <Button intent="destructive" size="sm">Delete Account</Button>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            id: 'notifications',
+            title: 'Notification Preferences',
+            content: (
+                <div className="space-y-3">
+                    {[
+                        'Email notifications',
+                        'Push notifications',
+                        'SMS notifications',
+                        'Marketing emails'
+                    ].map((item) => (
+                        <div key={item} className="flex items-center justify-between">
+                            <span>{item}</span>
+                            <input type="checkbox" className="toggle" defaultChecked />
+                        </div>
+                    ))}
+                </div>
+            ),
+        },
     ];
 
     const themes: Array<typeof selectedTheme> = ['light', 'dark', 'purple', 'pink', 'green', 'blue'];
+    const sizes: Array<typeof selectedSize> = ['sm', 'md', 'lg'];
+    const variants: Array<typeof selectedVariant> = ['default', 'bordered', 'separated', 'flush', 'ghost'];
 
     return (
-        <div className="p-6 space-y-6 min-h-screen">
+        <div className=" space-y-2 min-h-screen">
             {/* Header Controls */}
-            <span>Progress Bar Testing Dashboard</span>
-            <div className="flex items-center space-x-3">
-                <Button
-                    onClick={() => setIsAnimating(!isAnimating)}
-                    intent={isAnimating ? "destructive" : "primary"}
-                    size="sm"
+
+                <div>
+                    <label className="text-sm font-medium mb-2 block">Theme:</label>
+                    <div className="flex flex-wrap gap-2">
+                        {themes.map(theme => (
+                            <Button
+                                key={theme}
+                                onClick={() => setSelectedTheme(theme)}
+                                intent={selectedTheme === theme ? "primary" : "secondary"}
+                                size="sm"
+                                className="capitalize"
+                            >
+                                {theme}
+                            </Button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Size Selection */}
+                <div>
+                    <label className="text-sm font-medium mb-2 block">Size:</label>
+                    <div className="flex gap-2">
+                        {sizes.map(size => (
+                            <Button
+                                key={size}
+                                onClick={() => setSelectedSize(size)}
+                                intent={selectedSize === size ? "primary" : "secondary"}
+                                size="sm"
+                                className="uppercase"
+                            >
+                                {size}
+                            </Button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Variant Selection */}
+                <div>
+                    <label className="text-sm font-medium mb-2 block">Variant:</label>
+                    <div className="flex flex-wrap gap-2">
+                        {variants.map(variant => (
+                            <Button
+                                key={variant}
+                                onClick={() => setSelectedVariant(variant)}
+                                intent={selectedVariant === variant ? "primary" : "secondary"}
+                                size="sm"
+                                className="capitalize"
+                            >
+                                {variant}
+                            </Button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Options */}
+                <div className="flex flex-wrap gap-4">
+                    <label className="flex items-center">
+                        <input
+                            type="checkbox"
+                            checked={allowMultiple}
+                            onChange={(e) => setAllowMultiple(e.target.checked)}
+                            className="mr-2"
+                        />
+                        Allow Multiple Open
+                    </label>
+                    <label className="flex items-center">
+                        <input
+                            type="checkbox"
+                            checked={showIcons}
+                            onChange={(e) => setShowIcons(e.target.checked)}
+                            className="mr-2"
+                        />
+                        Show Icons
+                    </label>
+                </div>
+
+
+            {/* Single Accordion Items */}
+
+                <AccordionItem
+                    title="Simple Accordion Item"
+                    theme={selectedTheme}
+                    size={selectedSize}
+                    variant={selectedVariant}
+                    showIcon={showIcons}
                 >
-                    {isAnimating ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
-                    {isAnimating ? 'Stop' : 'Start'} Animation
-                </Button>
-                <Button onClick={resetProgress} intent="secondary" size="sm">
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    Reset Values
-                </Button>
-            </div>
-            <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium">Theme:</span>
-                {themes.map(theme => (
-                    <Button
-                        key={theme}
-                        onClick={() => setSelectedTheme(theme)}
-                        intent={selectedTheme === theme ? "primary" : "secondary"}
-                        size="sm"
-                        className="capitalize"
-                    >
-                        {theme}
-                    </Button>
-                ))}
-            </div>
+                    <p>This is a simple accordion item with basic content. Perfect for FAQ sections or collapsible content areas.</p>
+                </AccordionItem>
 
-            {/* Linear Progress Bars */}
-            <div>
-                <h3 className="text-sm font-semibold mb-3">Basic Linear Progress</h3>
-                <LinearProgress
-                    value={progressValues.linear}
+                <AccordionItem
+                    title="Accordion with Icon"
                     theme={selectedTheme}
-                    size="md"
-                    showLabel
-                    showPercentage
-                    label="Download Progress"
-                    animated
-                />
-            </div>
-
-            {/* Gradient Linear Progress */}
-            <div>
-                <h3 className="text-sm font-semibold mb-3">Gradient Linear Progress</h3>
-                <LinearProgress
-                    value={progressValues.gradient}
-                    theme={selectedTheme}
-                    size="lg"
-                    variant="gradient"
-                    showPercentage
-                    label="Upload Progress"
-                    animated
-                />
-            </div>
-
-            {/* Striped Linear Progress */}
-            <div>
-                <h3 className="text-sm font-semibold mb-3">Striped Linear Progress</h3>
-                <LinearProgress
-                    value={progressValues.striped}
-                    theme={selectedTheme}
-                    size="md"
-                    showLabel
-                    showPercentage
-                    label="Processing..."
-                    animated
-                    striped
-                />
-            </div>
-
-            {/* Different Sizes */}
-            <div>
-                <h3 className="text-sm font-semibold mb-3">Different Sizes</h3>
-                <div className="space-y-3">
-                    {(['xs', 'sm', 'md', 'lg', 'xl'] as const).map(size => (
-                        <LinearProgress
-                            key={size}
-                            value={progressValues.linear}
-                            theme={selectedTheme}
-                            size={size}
-                            showLabel
-                            showPercentage
-                            label={`Size: ${size.toUpperCase()}`}
-                            animated
-                        />
-                    ))}
-                </div>
-            </div>
-
-            {/* Circular Progress Bars */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                {/* Different sizes */}
-                {(['xs', 'sm', 'md', 'lg', 'xl'] as const).map(size => (
-                    <div key={size} className="text-center">
-                        <h4 className="text-xs font-medium mb-2">{size.toUpperCase()}</h4>
-                        <CircularProgress
-                            value={progressValues.circular}
-                            theme={selectedTheme}
-                            size={size}
-                            showText
-                            showPercentage
-                            animated
-                            label="Complete"
-                        />
+                    size={selectedSize}
+                    variant={selectedVariant}
+                    icon={<Settings />}
+                    showIcon={showIcons}
+                    defaultExpanded
+                >
+                    <div>
+                        <p>This accordion item includes a custom icon in the header.</p>
+                        <div className="mt-3 p-3 bg-yellow-50 rounded-md">
+                            <p className="text-sm text-yellow-800">
+                                Icons help users quickly identify content categories!
+                            </p>
+                        </div>
                     </div>
-                ))}
-            </div>
+                </AccordionItem>
 
-            {/* Semi-Circular Progress */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {themes.slice(0, 3).map(theme => (
-                    <div key={theme} className="text-center">
-                        <h4 className="text-sm font-medium mb-4 capitalize">{theme} Theme</h4>
-                        <SemiCircularProgress
-                            value={progressValues.semiCircular}
-                            theme={theme}
+                <AccordionItem
+                    title="Disabled Accordion"
+                    theme={selectedTheme}
+                    size={selectedSize}
+                    variant={selectedVariant}
+                    disabled
+                    icon={<Shield />}
+                    showIcon={showIcons}
+                >
+                    <p>This content cannot be accessed because the accordion is disabled.</p>
+                </AccordionItem>
+
+                <AccordionItem
+                    title="Rich Content Accordion"
+                    theme={selectedTheme}
+                    size={selectedSize}
+                    variant={selectedVariant}
+                    icon={<Zap />}
+                    showIcon={showIcons}
+                >
+                    <div className="space-y-4">
+                        <h3 className="font-semibold">Advanced Features</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="p-3 bg-blue-50 rounded-md">
+                                <h4 className="font-semibold text-blue-800">Feature 1</h4>
+                                <p className="text-sm text-blue-600">Advanced analytics and reporting</p>
+                            </div>
+                            <div className="p-3 bg-green-50 rounded-md">
+                                <h4 className="font-semibold text-green-800">Feature 2</h4>
+                                <p className="text-sm text-green-600">Real-time collaboration tools</p>
+                            </div>
+                        </div>
+                        <Button size="sm" className="mt-3">Learn More</Button>
+                    </div>
+                </AccordionItem>
+
+
+            {/* FAQ Accordion Group */}
+
+                <AccordionGroup
+                items={faqData}
+                theme={selectedTheme}
+                size={selectedSize}
+                variant={selectedVariant}
+                allowMultiple={allowMultiple}
+                defaultExpandedItems={['faq1']}
+                    />
+
+
+            {/* Settings Accordion Group */}
+
+                <AccordionGroup
+                    items={settingsData.map((item, index) => ({
+                        ...item,
+                        content: (
+                            <div className="accordion-content-wrapper">
+                                {item.content}
+                            </div>
+                        )
+                    }))}
+                    theme={selectedTheme}
+                    size={selectedSize}
+                    variant={selectedVariant}
+                    allowMultiple={allowMultiple}
+                />
+
+
+            {/* Different Variants Showcase */}
+
+                {variants.map(variant => (
+                    <div key={variant}>
+                        <h3 className="text-sm font-semibold mb-3 capitalize">{variant} Variant</h3>
+                        <AccordionGroup
+                            items={[
+                                {
+                                    id: `${variant}-1`,
+                                    title: `${variant.charAt(0).toUpperCase() + variant.slice(1)} Example 1`,
+                                    content: `This is an example of the ${variant} variant. Each variant has its own unique styling and appearance.`,
+                                },
+                                {
+                                    id: `${variant}-2`,
+                                    title: `${variant.charAt(0).toUpperCase() + variant.slice(1)} Example 2`,
+                                    content: (
+                                        <div>
+                                            <p>This variant showcases different visual styles:</p>
+                                            <ul className="mt-2 ml-4 list-disc">
+                                                <li>Custom border styling</li>
+                                                <li>Different spacing</li>
+                                                <li>Unique visual hierarchy</li>
+                                            </ul>
+                                        </div>
+                                    ),
+                                },
+                            ]}
+                            theme={selectedTheme}
                             size="md"
-                            showText
-                            showPercentage
-                            animated
-                            label={`${Math.round(progressValues.semiCircular)}% Complete`}
+                            variant={variant}
+                            allowMultiple={true}
                         />
                     </div>
                 ))}
-            </div>
 
-            {/* Dotted Progress */}
-            <div>
-                <h3 className="text-sm font-semibold mb-3">Different Dot Counts</h3>
-                <div className="space-y-4">
-                    {[10, 15, 20, 25].map(dotCount => (
-                        <div key={dotCount}>
-                            <span className="text-xs text-gray-600 mb-2 block">{dotCount} dots</span>
-                            <DottedProgress
-                                value={progressValues.dotted}
-                                theme={selectedTheme}
-                                size="md"
-                                dotCount={dotCount}
-                                animated
-                                showPercentage
-                            />
-                        </div>
-                    ))}
-                </div>
-            </div>
 
-            {/* Step Progress */}
-            <div>
-                <h3 className="text-sm font-semibold mb-3">Project Timeline</h3>
-                <StepProgress
-                    steps={stepData}
-                    theme={selectedTheme}
-                    size="md"
-                />
-                <div className="mt-4 flex flex-wrap gap-2">
-                    {stepData.map((step, index) => (
-                        <Button
-                            key={index}
-                            onClick={() => toggleStep(index)}
-                            intent="primary"
-                            size="sm"
+            {/* Size Comparison */}
+
+                {sizes.map(size => (
+                    <div key={size}>
+                        <h3 className="text-sm font-semibold mb-3 uppercase">{size} Size</h3>
+                        <AccordionItem
+                            title={`This is ${size.toUpperCase()} size accordion`}
+                            theme={selectedTheme}
+                            size={size}
+                            variant="default"
+                            icon={<Star />}
+                            showIcon={showIcons}
                         >
-                            Toggle {step.label}
-                        </Button>
-                    ))}
-                </div>
-            </div>
-
-            {/* Different sizes */}
-            <div>
-                <h3 className="text-sm font-semibold mb-3">Different Sizes</h3>
-                <div className="space-y-6">
-                    {(['sm', 'md', 'lg'] as const).map(size => (
-                        <div key={size}>
-                            <span className="text-xs text-gray-600 mb-2 block">Size: {size.toUpperCase()}</span>
-                            <StepProgress
-                                steps={[
-                                    { label: "Start", completed: true },
-                                    { label: "Middle", active: true, completed: false },
-                                    { label: "End", completed: false }
-                                ]}
-                                theme={selectedTheme}
-                                size={size}
-                            />
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Real-time Progress Demo */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <h3 className="text-sm font-semibold mb-3">File Upload Simulation</h3>
-                    <LinearProgress
-                        value={progressValues.linear}
-                        theme={selectedTheme}
-                        size="md"
-                        showLabel
-                        showPercentage
-                        label="Uploading files..."
-                        animated
-                        striped
-                    />
-                </div>
-                <div>
-                    <h3 className="text-sm font-semibold mb-3">System Status</h3>
-                    <CircularProgress
-                        value={progressValues.circular}
-                        theme={selectedTheme}
-                        size="lg"
-                        showText
-                        showPercentage
-                        animated
-                        label="System Health"
-                    />
-                </div>
-            </div>
-
-            {/* Original Dashboard Content */}
-            <div className="data-container space-y-2">
-                {data.map(item => (
-                    <div key={item.id} className="p-2 rounded border">
-                        {item.name}
+                            <p>
+                                The {size} size provides {size === 'sm' ? 'compact' : size === 'md' ? 'balanced' : 'spacious'} spacing
+                                for {size === 'sm' ? 'mobile interfaces' : size === 'md' ? 'general use' : 'desktop applications'}.
+                            </p>
+                        </AccordionItem>
                     </div>
                 ))}
-            </div>
 
-            {/* Pagination with Progress */}
-            <div className="mt-4 flex items-center justify-between">
-                <span className="text-sm text-gray-600">
-                    Page {currentPage} of {totalPages || 1}
-                </span>
-                <LinearProgress
-                    value={(currentPage / (totalPages || 1)) * 100}
+
+            {/* Interactive Demo */}
+
+                <AccordionGroup
+                    items={[
+                        {
+                            id: 'demo1',
+                            title: 'Click to expand this section',
+                            content: (
+                                <div>
+                                    <p>Great! You've expanded this section. Here are some interactive elements:</p>
+                                    <div className="mt-3 space-y-2">
+                                        <Button size="sm" intent="secondary">Button 1</Button>
+                                        <Button size="sm" intent="secondary">Button 2</Button>
+                                        <Button size="sm" intent="secondary">Button 3</Button>
+                                    </div>
+                                </div>
+                            ),
+                        },
+                        {
+                            id: 'demo2',
+                            title: 'Nested content example',
+                            content: (
+                                <div>
+                                    <p>This section contains nested accordions:</p>
+                                    <div className="mt-3">
+                                        <AccordionItem
+                                            title="Nested Accordion 1"
+                                            theme={selectedTheme}
+                                            size="sm"
+                                            variant="ghost"
+                                        >
+                                            <p>This is nested content inside another accordion!</p>
+                                        </AccordionItem>
+                                        <AccordionItem
+                                            title="Nested Accordion 2"
+                                            theme={selectedTheme}
+                                            size="sm"
+                                            variant="ghost"
+                                        >
+                                            <p>Nested accordions are perfect for complex hierarchical content.</p>
+                                        </AccordionItem>
+                                    </div>
+                                </div>
+                            ),
+                        },
+                        {
+                            id: 'demo3',
+                            title: 'Form inside accordion',
+                            content: (
+                                <div>
+                                    <form className="space-y-3">
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Name</label>
+                                            <input type="text" className="w-full p-2 border rounded-md" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Message</label>
+                                            <textarea className="w-full p-2 border rounded-md" rows={3}></textarea>
+                                        </div>
+                                        <Button size="sm">Submit</Button>
+                                    </form>
+                                </div>
+                            ),
+                        },
+                    ]}
                     theme={selectedTheme}
-                    size="sm"
-                    width="200px"
-                    showPercentage
+                    size={selectedSize}
+                    variant={selectedVariant}
+                    allowMultiple={allowMultiple}
                 />
-            </div>
 
-            {/* Progress Values Display */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                {Object.entries(progressValues).map(([key, value]) => (
-                    <div key={key} className="flex justify-between p-2 rounded">
-                        <span className="capitalize">{key}:</span>
-                        <span className="font-mono">{Math.round(value)}%</span>
-                    </div>
-                ))}
-            </div>
         </div>
     );
 };
 
-export default Dashboard;
+export default AccordionTestDashboard;
