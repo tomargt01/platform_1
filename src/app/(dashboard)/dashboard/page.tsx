@@ -1,513 +1,373 @@
-"use client";
+'use client';
 
-import { useState } from 'react';
-import { AccordionItem, AccordionGroup } from '#/components/ui/base/Accordion';
-import { Card } from '#/components/ui/base/Card';
-import { Button } from '#/components/ui/base/Button';
-import { Badge } from '#/components/ui/base/Badge';
-import {
-    Settings,
-    User,
-    Bell,
-    Shield,
-    CreditCard,
-    HelpCircle,
-    FileText,
-    Globe,
-    Zap,
-    Heart,
-    Star,
-    Bookmark
-} from 'lucide-react';
+import React, { useState } from 'react';
+import { Autocomplete } from '#/components/ui/base/Autocomplete';
+import type { AutocompleteOption } from '#/components/ui/base/Autocomplete';
 
-const AccordionTestDashboard = () => {
-    const [selectedTheme, setSelectedTheme] = useState<'light' | 'dark' | 'purple' | 'pink' | 'green' | 'blue'>('light');
-    const [selectedSize, setSelectedSize] = useState<'sm' | 'md' | 'lg'>('md');
-    const [selectedVariant, setSelectedVariant] = useState<'default' | 'bordered' | 'separated' | 'flush' | 'ghost'>('default');
-    const [allowMultiple, setAllowMultiple] = useState(false);
-    const [showIcons, setShowIcons] = useState(true);
+const Dashboard = () => {
+    // State for different autocomplete examples
+    const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
+    const [selectedTeachers, setSelectedTeachers] = useState<AutocompleteOption[]>([]);
+    const [selectedSubject, setSelectedSubject] = useState<AutocompleteOption | null>(null);
+    const [customValue, setCustomValue] = useState<string>('');
 
-    // Sample accordion data
-    const faqData = [
-        {
-            id: 'faq1',
-            title: 'What is your return policy?',
-            content: (
-                <div>
-                    <p>We offer a 30-day return policy for all items. Items must be in original condition with tags attached.</p>
-                    <ul className="mt-2 ml-4 list-disc">
-                        <li>Returns are processed within 5-7 business days</li>
-                        <li>Original shipping costs are non-refundable</li>
-                        <li>Customer is responsible for return shipping costs</li>
-                    </ul>
-                </div>
-            ),
-            defaultExpanded: true,
-        },
-        {
-            id: 'faq2',
-            title: 'How do I track my order?',
-            content: (
-                <div>
-                    <p>You can track your order using the tracking number provided in your confirmation email.</p>
-                    <div className="mt-3 p-3 bg-blue-50 rounded-md">
-                        <p className="text-sm text-blue-800">
-                            <strong>Pro tip:</strong> Create an account to view all your orders in one place!
-                        </p>
-                    </div>
-                </div>
-            ),
-        },
-        {
-            id: 'faq3',
-            title: 'Do you offer international shipping?',
-            content: (
-                <div>
-                    <p>Yes! We ship to over 50 countries worldwide.</p>
-                    <div className="mt-3">
-                        <h4 className="font-semibold">Shipping times:</h4>
-                        <ul className="mt-1 ml-4 list-disc">
-                            <li>US & Canada: 3-5 business days</li>
-                            <li>Europe: 5-7 business days</li>
-                            <li>Asia & Australia: 7-10 business days</li>
-                            <li>Rest of world: 10-15 business days</li>
-                        </ul>
-                    </div>
-                </div>
-            ),
-        },
-        {
-            id: 'faq4',
-            title: 'What payment methods do you accept?',
-            content: (
-                <div>
-                    <p>We accept all major payment methods:</p>
-                    <div className="grid grid-cols-2 gap-4 mt-3">
-                        <div>
-                            <h4 className="font-semibold">Credit Cards:</h4>
-                            <ul className="list-disc ml-4">
-                                <li>Visa</li>
-                                <li>Mastercard</li>
-                                <li>American Express</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-semibold">Digital Wallets:</h4>
-                            <ul className="list-disc ml-4">
-                                <li>PayPal</li>
-                                <li>Apple Pay</li>
-                                <li>Google Pay</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            ),
-        },
-        {
-            id: 'faq5',
-            title: 'How can I contact customer support?',
-            content: (
-                <div>
-                    <p>We're here to help! Contact us through any of these methods:</p>
-                    <div className="mt-3 space-y-2">
-                        <div className="flex items-center">
-                            <Bell className="w-4 h-4 mr-2 text-blue-500" />
-                            <span>Email: support@example.com</span>
-                        </div>
-                        <div className="flex items-center">
-                            <Globe className="w-4 h-4 mr-2 text-green-500" />
-                            <span>Live Chat: Available 24/7</span>
-                        </div>
-                        <div className="flex items-center">
-                            <User className="w-4 h-4 mr-2 text-purple-500" />
-                            <span>Phone: 1-800-123-4567</span>
-                        </div>
-                    </div>
-                </div>
-            ),
-        },
+    // Sample data for school ERP
+    const studentOptions = [
+        'Aarav Kumar',
+        'Ananya Sharma',
+        'Arjun Singh',
+        'Diya Patel',
+        'Ishaan Gupta',
+        'Kavya Reddy',
+        'Nikhil Agarwal',
+        'Priya Joshi',
+        'Rohan Mehta',
+        'Shreya Verma'
     ];
 
-    const settingsData = [
+    const teacherOptions: AutocompleteOption[] = [
         {
-            id: 'account',
-            title: 'Account Settings',
-            content: (
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Display Name</label>
-                        <input
-                            type="text"
-                            className="w-full p-2 border rounded-md"
-                            placeholder="Enter your display name"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Email Address</label>
-                        <input
-                            type="email"
-                            className="w-full p-2 border rounded-md"
-                            placeholder="your@email.com"
-                        />
-                    </div>
-                    <Button size="sm">Save Changes</Button>
-                </div>
-            ),
+            label: 'Dr. Rajesh Kumar',
+            value: 'teacher_001',
+            description: 'Mathematics Department',
+            group: 'Senior Faculty'
         },
         {
-            id: 'privacy',
-            title: 'Privacy & Security',
-            content: (
-                <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                        <span>Two-factor Authentication</span>
-                        <Badge intent="secondary">Enabled</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <span>Data Export</span>
-                        <Button intent="secondary" size="sm">Download</Button>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <span>Account Deletion</span>
-                        <Button intent="destructive" size="sm">Delete Account</Button>
-                    </div>
-                </div>
-            ),
+            label: 'Prof. Sunita Sharma',
+            value: 'teacher_002',
+            description: 'English Literature',
+            group: 'Senior Faculty'
         },
         {
-            id: 'notifications',
-            title: 'Notification Preferences',
-            content: (
-                <div className="space-y-3">
-                    {[
-                        'Email notifications',
-                        'Push notifications',
-                        'SMS notifications',
-                        'Marketing emails'
-                    ].map((item) => (
-                        <div key={item} className="flex items-center justify-between">
-                            <span>{item}</span>
-                            <input type="checkbox" className="toggle" defaultChecked />
-                        </div>
-                    ))}
-                </div>
-            ),
+            label: 'Mr. Vikash Singh',
+            value: 'teacher_003',
+            description: 'Physics Department',
+            group: 'Junior Faculty'
         },
+        {
+            label: 'Ms. Priyanka Gupta',
+            value: 'teacher_004',
+            description: 'Chemistry Department',
+            group: 'Junior Faculty'
+        },
+        {
+            label: 'Dr. Amit Verma',
+            value: 'teacher_005',
+            description: 'Computer Science',
+            group: 'Senior Faculty'
+        }
     ];
 
-    const themes: Array<typeof selectedTheme> = ['light', 'dark', 'purple', 'pink', 'green', 'blue'];
-    const sizes: Array<typeof selectedSize> = ['sm', 'md', 'lg'];
-    const variants: Array<typeof selectedVariant> = ['default', 'bordered', 'separated', 'flush', 'ghost'];
+    const subjectOptions: AutocompleteOption[] = [
+        { label: 'Mathematics', value: 'math', group: 'Core Subjects' },
+        { label: 'Physics', value: 'physics', group: 'Science' },
+        { label: 'Chemistry', value: 'chemistry', group: 'Science' },
+        { label: 'Biology', value: 'biology', group: 'Science' },
+        { label: 'English', value: 'english', group: 'Languages' },
+        { label: 'Hindi', value: 'hindi', group: 'Languages' },
+        { label: 'History', value: 'history', group: 'Social Studies' },
+        { label: 'Geography', value: 'geography', group: 'Social Studies' },
+        { label: 'Computer Science', value: 'computer', group: 'Technology' },
+        { label: 'Physical Education', value: 'pe', group: 'Extra Curricular' }
+    ];
+
+    // Mock async function for demonstration
+    const loadStudentsAsync = async (inputValue: string): Promise<AutocompleteOption[]> => {
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Filter students based on input
+        const filteredStudents = studentOptions
+            .filter(student => student.toLowerCase().includes(inputValue.toLowerCase()))
+            .map(student => ({
+                label: student,
+                value: student.toLowerCase().replace(' ', '_'),
+                description: `Class: ${Math.floor(Math.random() * 12) + 1}`
+            }));
+
+        return filteredStudents;
+    };
 
     return (
-        <div className=" space-y-2 min-h-screen">
-            {/* Header Controls */}
+        <div className="min-h-screen bg-gray-50 p-6">
+            {/* Header */}
+            <div className="mb-8">
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                    School ERP Dashboard
+                </h1>
+                <p className="text-gray-600">
+                    Testing Autocomplete Components - Different Themes & Features
+                </p>
+            </div>
 
-                <div>
-                    <label className="text-sm font-medium mb-2 block">Theme:</label>
-                    <div className="flex flex-wrap gap-2">
-                        {themes.map(theme => (
-                            <Button
-                                key={theme}
-                                onClick={() => setSelectedTheme(theme)}
-                                intent={selectedTheme === theme ? "primary" : "secondary"}
-                                size="sm"
-                                className="capitalize"
-                            >
-                                {theme}
-                            </Button>
-                        ))}
-                    </div>
-                </div>
+            {/* Grid Layout for Components */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
 
-                {/* Size Selection */}
-                <div>
-                    <label className="text-sm font-medium mb-2 block">Size:</label>
-                    <div className="flex gap-2">
-                        {sizes.map(size => (
-                            <Button
-                                key={size}
-                                onClick={() => setSelectedSize(size)}
-                                intent={selectedSize === size ? "primary" : "secondary"}
-                                size="sm"
-                                className="uppercase"
-                            >
-                                {size}
-                            </Button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Variant Selection */}
-                <div>
-                    <label className="text-sm font-medium mb-2 block">Variant:</label>
-                    <div className="flex flex-wrap gap-2">
-                        {variants.map(variant => (
-                            <Button
-                                key={variant}
-                                onClick={() => setSelectedVariant(variant)}
-                                intent={selectedVariant === variant ? "primary" : "secondary"}
-                                size="sm"
-                                className="capitalize"
-                            >
-                                {variant}
-                            </Button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Options */}
-                <div className="flex flex-wrap gap-4">
-                    <label className="flex items-center">
-                        <input
-                            type="checkbox"
-                            checked={allowMultiple}
-                            onChange={(e) => setAllowMultiple(e.target.checked)}
-                            className="mr-2"
-                        />
-                        Allow Multiple Open
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                            type="checkbox"
-                            checked={showIcons}
-                            onChange={(e) => setShowIcons(e.target.checked)}
-                            className="mr-2"
-                        />
-                        Show Icons
-                    </label>
-                </div>
-
-
-            {/* Single Accordion Items */}
-
-                <AccordionItem
-                    title="Simple Accordion Item"
-                    theme={selectedTheme}
-                    size={selectedSize}
-                    variant={selectedVariant}
-                    showIcon={showIcons}
-                >
-                    <p>This is a simple accordion item with basic content. Perfect for FAQ sections or collapsible content areas.</p>
-                </AccordionItem>
-
-                <AccordionItem
-                    title="Accordion with Icon"
-                    theme={selectedTheme}
-                    size={selectedSize}
-                    variant={selectedVariant}
-                    icon={<Settings />}
-                    showIcon={showIcons}
-                    defaultExpanded
-                >
-                    <div>
-                        <p>This accordion item includes a custom icon in the header.</p>
-                        <div className="mt-3 p-3 bg-yellow-50 rounded-md">
-                            <p className="text-sm text-yellow-800">
-                                Icons help users quickly identify content categories!
-                            </p>
-                        </div>
-                    </div>
-                </AccordionItem>
-
-                <AccordionItem
-                    title="Disabled Accordion"
-                    theme={selectedTheme}
-                    size={selectedSize}
-                    variant={selectedVariant}
-                    disabled
-                    icon={<Shield />}
-                    showIcon={showIcons}
-                >
-                    <p>This content cannot be accessed because the accordion is disabled.</p>
-                </AccordionItem>
-
-                <AccordionItem
-                    title="Rich Content Accordion"
-                    theme={selectedTheme}
-                    size={selectedSize}
-                    variant={selectedVariant}
-                    icon={<Zap />}
-                    showIcon={showIcons}
-                >
-                    <div className="space-y-4">
-                        <h3 className="font-semibold">Advanced Features</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="p-3 bg-blue-50 rounded-md">
-                                <h4 className="font-semibold text-blue-800">Feature 1</h4>
-                                <p className="text-sm text-blue-600">Advanced analytics and reporting</p>
-                            </div>
-                            <div className="p-3 bg-green-50 rounded-md">
-                                <h4 className="font-semibold text-green-800">Feature 2</h4>
-                                <p className="text-sm text-green-600">Real-time collaboration tools</p>
-                            </div>
-                        </div>
-                        <Button size="sm" className="mt-3">Learn More</Button>
-                    </div>
-                </AccordionItem>
-
-
-            {/* FAQ Accordion Group */}
-
-                <AccordionGroup
-                items={faqData}
-                theme={selectedTheme}
-                size={selectedSize}
-                variant={selectedVariant}
-                allowMultiple={allowMultiple}
-                defaultExpandedItems={['faq1']}
+                {/* Card 1: Simple String Autocomplete */}
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                        Simple Student Search
+                    </h3>
+                    <Autocomplete
+                        options={studentOptions}
+                        value={selectedStudent}
+                        onChange={(value) => setSelectedStudent(value as string)}
+                        placeholder="Search student by name..."
+                        theme="blue"
+                        size="md"
+                        label="Select Student"
+                        clearable
+                        showIcon
+                        className="mb-4"
                     />
+                    {selectedStudent && (
+                        <div className="mt-3 p-3 bg-blue-50 rounded-md">
+                            <p className="text-sm text-blue-800">
+                                <strong>Selected:</strong> {selectedStudent}
+                            </p>
+                        </div>
+                    )}
+                </div>
 
+                {/* Card 2: Multiple Selection with Groups */}
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                        Multiple Teachers Selection
+                    </h3>
+                    <Autocomplete
+                        options={teacherOptions}
+                        value={selectedTeachers}
+                        onChange={(value) => setSelectedTeachers(value)}
+                        placeholder="Select multiple teachers..."
+                        theme="purple"
+                        size="md"
+                        label="Teachers"
+                        multiple={true}  // Explicitly set to true
+                        clearable
+                        groupBy="group"
+                        className="mb-4"
+                        customColors={{
+                            selectedOption: 'bg-purple-600 text-white',
+                            hoveredOption: 'bg-purple-50'
+                        }}
+                    />
+                    {selectedTeachers.length > 0 && (
+                        <div className="mt-3 p-3 bg-purple-50 rounded-md">
+                            <p className="text-sm text-purple-800 mb-2">
+                                <strong>Selected Teachers:</strong>
+                            </p>
+                            <ul className="text-xs text-purple-700">
+                                {selectedTeachers.map((teacher, index) => (
+                                    <li key={index}>
+                                        • {teacher.label} - {teacher.description}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
 
-            {/* Settings Accordion Group */}
+                {/* Card 3: Subject with Custom Colors */}
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                        Subject Selection (Grouped)
+                    </h3>
+                    <Autocomplete
+                        options={subjectOptions}
+                        value={selectedSubject}
+                        onChange={(value) => setSelectedSubject(value as AutocompleteOption)}
+                        placeholder="Choose subject..."
+                        theme="green"
+                        size="lg"
+                        label="Subject"
+                        groupBy="group"
+                        clearable
+                        customColors={{
+                            selectedOption: 'bg-green-600 text-white',
+                            hoveredOption: 'bg-green-50',
+                            border: 'border-green-300 focus:border-green-500'
+                        }}
+                        className="mb-4"
+                    />
+                    {selectedSubject && (
+                        <div className="mt-3 p-3 bg-green-50 rounded-md">
+                            <p className="text-sm text-green-800">
+                                <strong>Selected:</strong> {selectedSubject.label}
+                            </p>
+                            <p className="text-xs text-green-600">
+                                Category: {(selectedSubject as any).group}
+                            </p>
+                        </div>
+                    )}
+                </div>
 
-                <AccordionGroup
-                    items={settingsData.map((item, index) => ({
-                        ...item,
-                        content: (
-                            <div className="accordion-content-wrapper">
-                                {item.content}
-                            </div>
-                        )
-                    }))}
-                    theme={selectedTheme}
-                    size={selectedSize}
-                    variant={selectedVariant}
-                    allowMultiple={allowMultiple}
-                />
+                {/* Card 4: Async Loading */}
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                        Async Student Search
+                    </h3>
+                    <Autocomplete
+                        options={[]}
+                        placeholder="Type to search students..."
+                        theme="pink"
+                        size="md"
+                        label="Dynamic Student Search"
+                        onLoadOptions={loadStudentsAsync}
+                        minInputLength={2}
+                        loadingText="Searching students..."
+                        noResultsText="No students found"
+                        helperText="Type at least 2 characters to search"
+                        className="mb-4"
+                        customColors={{
+                            selectedOption: 'bg-pink-600 text-white',
+                            hoveredOption: 'bg-pink-50'
+                        }}
+                    />
+                </div>
 
+                {/* Card 5: Free Solo Mode */}
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                        Custom Value Entry
+                    </h3>
+                    <Autocomplete
+                        options={['Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5']}
+                        value={customValue}
+                        onChange={(value) => setCustomValue(value as string)}
+                        placeholder="Type or select class..."
+                        theme="dark"
+                        size="md"
+                        label="Class Selection (Free Solo)"
+                        freeSolo
+                        clearable
+                        helperText="You can type custom values or select from suggestions"
+                        className="mb-4"
+                    />
+                    {customValue && (
+                        <div className="mt-3 p-3 bg-gray-100 rounded-md">
+                            <p className="text-sm text-gray-800">
+                                <strong>Entered Value:</strong> {customValue}
+                            </p>
+                        </div>
+                    )}
+                </div>
 
-            {/* Different Variants Showcase */}
+                {/* Card 6: Different Sizes Demo */}
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                        Different Sizes
+                    </h3>
 
-                {variants.map(variant => (
-                    <div key={variant}>
-                        <h3 className="text-sm font-semibold mb-3 capitalize">{variant} Variant</h3>
-                        <AccordionGroup
-                            items={[
-                                {
-                                    id: `${variant}-1`,
-                                    title: `${variant.charAt(0).toUpperCase() + variant.slice(1)} Example 1`,
-                                    content: `This is an example of the ${variant} variant. Each variant has its own unique styling and appearance.`,
-                                },
-                                {
-                                    id: `${variant}-2`,
-                                    title: `${variant.charAt(0).toUpperCase() + variant.slice(1)} Example 2`,
-                                    content: (
-                                        <div>
-                                            <p>This variant showcases different visual styles:</p>
-                                            <ul className="mt-2 ml-4 list-disc">
-                                                <li>Custom border styling</li>
-                                                <li>Different spacing</li>
-                                                <li>Unique visual hierarchy</li>
-                                            </ul>
-                                        </div>
-                                    ),
-                                },
-                            ]}
-                            theme={selectedTheme}
+                    <div className="space-y-4">
+                        <Autocomplete
+                            options={['Small Size', 'Option 2', 'Option 3']}
+                            placeholder="Small size..."
+                            theme="blue"
+                            size="sm"
+                            label="Small (sm)"
+                        />
+
+                        <Autocomplete
+                            options={['Medium Size', 'Option 2', 'Option 3']}
+                            placeholder="Medium size..."
+                            theme="purple"
                             size="md"
-                            variant={variant}
-                            allowMultiple={true}
+                            label="Medium (md)"
+                        />
+
+                        <Autocomplete
+                            options={['Large Size', 'Option 2', 'Option 3']}
+                            placeholder="Large size..."
+                            theme="green"
+                            size="lg"
+                            label="Large (lg)"
                         />
                     </div>
-                ))}
+                </div>
 
+                {/* Card 7: Error States */}
+                <div className="bg-white rounded-lg shadow-sm border p-6 lg:col-span-2 xl:col-span-1">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                        Error & Disabled States
+                    </h3>
 
-            {/* Size Comparison */}
+                    <div className="space-y-4">
+                        <Autocomplete
+                            options={['Option 1', 'Option 2', 'Option 3']}
+                            placeholder="With error..."
+                            theme="light"
+                            size="md"
+                            label="Field with Error"
+                            error="This field is required"
+                            required
+                        />
 
-                {sizes.map(size => (
-                    <div key={size}>
-                        <h3 className="text-sm font-semibold mb-3 uppercase">{size} Size</h3>
-                        <AccordionItem
-                            title={`This is ${size.toUpperCase()} size accordion`}
-                            theme={selectedTheme}
-                            size={size}
-                            variant="default"
-                            icon={<Star />}
-                            showIcon={showIcons}
-                        >
-                            <p>
-                                The {size} size provides {size === 'sm' ? 'compact' : size === 'md' ? 'balanced' : 'spacious'} spacing
-                                for {size === 'sm' ? 'mobile interfaces' : size === 'md' ? 'general use' : 'desktop applications'}.
-                            </p>
-                        </AccordionItem>
+                        <Autocomplete
+                            options={['Option 1', 'Option 2', 'Option 3']}
+                            placeholder="Disabled field..."
+                            theme="light"
+                            size="md"
+                            label="Disabled Field"
+                            disabled
+                            value="Pre-selected value"
+                        />
                     </div>
-                ))}
+                </div>
 
-
-            {/* Interactive Demo */}
-
-                <AccordionGroup
-                    items={[
-                        {
-                            id: 'demo1',
-                            title: 'Click to expand this section',
-                            content: (
-                                <div>
-                                    <p>Great! You've expanded this section. Here are some interactive elements:</p>
-                                    <div className="mt-3 space-y-2">
-                                        <Button size="sm" intent="secondary">Button 1</Button>
-                                        <Button size="sm" intent="secondary">Button 2</Button>
-                                        <Button size="sm" intent="secondary">Button 3</Button>
-                                    </div>
+                {/* Card 8: Custom Rendering */}
+                <div className="bg-white rounded-lg shadow-sm border p-6 lg:col-span-2">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                        Custom Option Rendering
+                    </h3>
+                    <Autocomplete
+                        options={teacherOptions}
+                        placeholder="Search teachers with custom display..."
+                        theme="blue"
+                        size="md"
+                        label="Teachers (Custom Rendering)"
+                        renderOption={(option) => (
+                            <div className="flex items-center gap-3 py-1">
+                                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span className="text-blue-600 font-medium text-sm">
+                                        {option.label.split(' ').map(n => n[0]).join('')}
+                                    </span>
                                 </div>
-                            ),
-                        },
-                        {
-                            id: 'demo2',
-                            title: 'Nested content example',
-                            content: (
-                                <div>
-                                    <p>This section contains nested accordions:</p>
-                                    <div className="mt-3">
-                                        <AccordionItem
-                                            title="Nested Accordion 1"
-                                            theme={selectedTheme}
-                                            size="sm"
-                                            variant="ghost"
-                                        >
-                                            <p>This is nested content inside another accordion!</p>
-                                        </AccordionItem>
-                                        <AccordionItem
-                                            title="Nested Accordion 2"
-                                            theme={selectedTheme}
-                                            size="sm"
-                                            variant="ghost"
-                                        >
-                                            <p>Nested accordions are perfect for complex hierarchical content.</p>
-                                        </AccordionItem>
-                                    </div>
+                                <div className="flex-1">
+                                    <div className="font-medium text-gray-900">{option.label}</div>
+                                    <div className="text-xs text-gray-500">{option.description}</div>
                                 </div>
-                            ),
-                        },
-                        {
-                            id: 'demo3',
-                            title: 'Form inside accordion',
-                            content: (
-                                <div>
-                                    <form className="space-y-3">
-                                        <div>
-                                            <label className="block text-sm font-medium mb-1">Name</label>
-                                            <input type="text" className="w-full p-2 border rounded-md" />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium mb-1">Message</label>
-                                            <textarea className="w-full p-2 border rounded-md" rows={3}></textarea>
-                                        </div>
-                                        <Button size="sm">Submit</Button>
-                                    </form>
+                                <div className="text-xs text-gray-400">
+                                    {(option as any).group}
                                 </div>
-                            ),
-                        },
-                    ]}
-                    theme={selectedTheme}
-                    size={selectedSize}
-                    variant={selectedVariant}
-                    allowMultiple={allowMultiple}
-                />
+                            </div>
+                        )}
+                        className="mb-4"
+                    />
+                </div>
+            </div>
 
+            {/* Results Summary */}
+            <div className="mt-8 bg-white rounded-lg shadow-sm border p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                    Current Selections Summary
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                    <div>
+                        <strong>Selected Student:</strong> {selectedStudent || 'None'}
+                    </div>
+                    <div>
+                        <strong>Selected Teachers:</strong> {selectedTeachers.length} selected
+                    </div>
+                    <div>
+                        <strong>Selected Subject:</strong> {selectedSubject?.label || 'None'}
+                    </div>
+                    <div className="md:col-span-2 lg:col-span-1">
+                        <strong>Custom Value:</strong> {customValue || 'None'}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
 
-export default AccordionTestDashboard;
+export default Dashboard;
