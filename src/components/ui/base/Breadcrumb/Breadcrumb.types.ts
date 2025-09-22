@@ -1,30 +1,32 @@
-import type { ReactNode } from "react";
-import type { HTMLMotionProps } from "framer-motion";
-
-type ConflictingProps =
-    | "onDrag"
-    | "onDragEnd"
-    | "onDragEnter"
-    | "onDragExit"
-    | "onDragLeave"
-    | "onDragOver"
-    | "onDragStart"
-    | "onDrop"
-    | "onAnimationStart"
-    | "onAnimationEnd"
-    | "onAnimationIteration";
+import { ReactNode } from 'react';
 
 export type Theme = "light" | "dark" | "purple" | "pink" | "green" | "blue";
 
-export type ToastVariant = "info" | "success" | "inProgress" | "error";
+export type BreadcrumbSize = "sm" | "md" | "lg";
 
-export interface ToastProps
-    extends Omit<HTMLMotionProps<"div">, "title" | ConflictingProps> {
-    variant?: ToastVariant; // Restricted to defined variants
+export interface BreadcrumbItem {
+    label: string;
+    href?: string;
+    icon?: ReactNode;
+    onClick?: () => void;
+    isActive?: boolean;
+    disabled?: boolean;
+}
+
+export interface BreadcrumbProps {
+    items: BreadcrumbItem[];
     theme?: Theme;
-    title?: string | ReactNode;
-    description?: string | ReactNode;
-    customIcon?: ReactNode;
-    duration?: number;
-    onDismiss?: () => void;
+    size?: BreadcrumbSize;
+    separator?: ReactNode;
+    showHomeIcon?: boolean;
+    maxItems?: number;
+    className?: string;
+    onItemClick?: (item: BreadcrumbItem, index: number) => void;
+    customColors?: {
+        text?: string;
+        activeText?: string;
+        hoverText?: string;
+        separator?: string;
+        background?: string;
+    };
 }

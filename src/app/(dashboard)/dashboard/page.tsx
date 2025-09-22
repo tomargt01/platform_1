@@ -1,370 +1,376 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Autocomplete } from '#/components/ui/base/Autocomplete';
-import type { AutocompleteOption } from '#/components/ui/base/Autocomplete';
+import {
+    Home,
+    Settings,
+    Users,
+    BarChart3,
+    FileText,
+    School,
+    GraduationCap,
+    Calendar,
+    BookOpen,
+    ChevronRight,
+    ArrowRight,
+    Slash,
+    Dot,
+    Triangle,
+    Star,
+    Heart,
+    ArrowBigRight,
+    MoveRight,
+    ChevronDown,
+    Plus,
+    Minus,
+    X
+} from 'lucide-react';
+import Breadcrumb from '#/components/ui/base/Breadcrumb/Breadcrumb';
+import { BreadcrumbItem, Theme } from '#/components/ui/base/Breadcrumb/Breadcrumb.types';
 
-const Dashboard = () => {
-    // State for different autocomplete examples
-    const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
-    const [selectedTeachers, setSelectedTeachers] = useState<AutocompleteOption[]>([]);
-    const [selectedSubject, setSelectedSubject] = useState<AutocompleteOption | null>(null);
-    const [customValue, setCustomValue] = useState<string>('');
+const Dashboard: React.FC = () => {
+    const [currentTheme, setCurrentTheme] = useState<Theme>('light');
+    const [currentSeparator, setCurrentSeparator] = useState<string>('chevron');
 
-    // Sample data for school ERP
-    const studentOptions = [
-        'Aarav Kumar',
-        'Ananya Sharma',
-        'Arjun Singh',
-        'Diya Patel',
-        'Ishaan Gupta',
-        'Kavya Reddy',
-        'Nikhil Agarwal',
-        'Priya Joshi',
-        'Rohan Mehta',
-        'Shreya Verma'
-    ];
+    // Sample breadcrumb data for different scenarios
+    const breadcrumbScenarios = {
+        dashboard: [
+            { label: 'Dashboard', href: '/dashboard', icon: <Home /> }
+        ],
+        students: [
+            { label: 'Dashboard', href: '/dashboard', icon: <Home /> },
+            { label: 'Students', href: '/students', icon: <Users /> },
+        ],
+        studentProfile: [
+            { label: 'Dashboard', href: '/dashboard', icon: <Home /> },
+            { label: 'Students', href: '/students', icon: <Users /> },
+            { label: 'Student Profile', href: '/students/123', icon: <GraduationCap /> },
+        ],
+        deepNavigation: [
+            { label: 'Dashboard', href: '/dashboard', icon: <Home /> },
+            { label: 'Academic', href: '/academic', icon: <School /> },
+            { label: 'Classes', href: '/academic/classes', icon: <BookOpen /> },
+            { label: 'Class 10th', href: '/academic/classes/10', icon: <Calendar /> },
+            { label: 'Section A', href: '/academic/classes/10/a', icon: <Users /> },
+            { label: 'Attendance', href: '/academic/classes/10/a/attendance', icon: <BarChart3 /> },
+            { label: 'Monthly Report', href: '/academic/classes/10/a/attendance/monthly', icon: <FileText /> },
+        ],
+    };
 
-    const teacherOptions: AutocompleteOption[] = [
-        {
-            label: 'Dr. Rajesh Kumar',
-            value: 'teacher_001',
-            description: 'Mathematics Department',
-            group: 'Senior Faculty'
-        },
-        {
-            label: 'Prof. Sunita Sharma',
-            value: 'teacher_002',
-            description: 'English Literature',
-            group: 'Senior Faculty'
-        },
-        {
-            label: 'Mr. Vikash Singh',
-            value: 'teacher_003',
-            description: 'Physics Department',
-            group: 'Junior Faculty'
-        },
-        {
-            label: 'Ms. Priyanka Gupta',
-            value: 'teacher_004',
-            description: 'Chemistry Department',
-            group: 'Junior Faculty'
-        },
-        {
-            label: 'Dr. Amit Verma',
-            value: 'teacher_005',
-            description: 'Computer Science',
-            group: 'Senior Faculty'
-        }
-    ];
+    // Custom separator options with actual icons
+    const separatorOptions = {
+        chevron: <ChevronRight className="w-4 h-4" />,
+        arrow: <ArrowRight className="w-4 h-4" />,
+        moveRight: <MoveRight className="w-4 h-4" />,
+        arrowBig: <ArrowBigRight className="w-4 h-4" />,
+        slash: <Slash className="w-4 h-4" />,
+        dot: <Dot className="w-4 h-4" />,
+        triangle: <Triangle className="w-3 h-3" />,
+        star: <Star className="w-3 h-3" />,
+        heart: <Heart className="w-3 h-3" />,
+        plus: <Plus className="w-3 h-3" />,
+        minus: <Minus className="w-3 h-3" />,
+        chevronDown: <ChevronDown className="w-4 h-4" />,
+        x: <X className="w-3 h-3" />,
+        text: '→',
+        textSlash: '/',
+        textPipe: '|',
+        textBullet: '•',
+        textGreater: '>',
+    };
 
-    const subjectOptions: AutocompleteOption[] = [
-        { label: 'Mathematics', value: 'math', group: 'Core Subjects' },
-        { label: 'Physics', value: 'physics', group: 'Science' },
-        { label: 'Chemistry', value: 'chemistry', group: 'Science' },
-        { label: 'Biology', value: 'biology', group: 'Science' },
-        { label: 'English', value: 'english', group: 'Languages' },
-        { label: 'Hindi', value: 'hindi', group: 'Languages' },
-        { label: 'History', value: 'history', group: 'Social Studies' },
-        { label: 'Geography', value: 'geography', group: 'Social Studies' },
-        { label: 'Computer Science', value: 'computer', group: 'Technology' },
-        { label: 'Physical Education', value: 'pe', group: 'Extra Curricular' }
-    ];
+    const getSeparatorIcon = () => {
+        return separatorOptions[currentSeparator as keyof typeof separatorOptions] || separatorOptions.chevron;
+    };
 
-    // Mock async function for demonstration
-    const loadStudentsAsync = async (inputValue: string): Promise<AutocompleteOption[]> => {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // Filter students based on input
-        const filteredStudents = studentOptions
-            .filter(student => student.toLowerCase().includes(inputValue.toLowerCase()))
-            .map(student => ({
-                label: student,
-                value: student.toLowerCase().replace(' ', '_'),
-                description: `Class: ${Math.floor(Math.random() * 12) + 1}`
-            }));
-
-        return filteredStudents;
+    const handleBreadcrumbClick = (item: BreadcrumbItem, index: number) => {
+        console.log('Breadcrumb clicked:', item, 'at index:', index);
     };
 
     return (
         <div className="min-h-screen bg-gray-50 p-6">
-            {/* Header */}
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    School ERP Dashboard
-                </h1>
-                <p className="text-gray-600">
-                    Testing Autocomplete Components - Different Themes & Features
-                </p>
-            </div>
+            <div className="max-w-7xl mx-auto space-y-8">
 
-            {/* Grid Layout for Components */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                        Breadcrumb Component Testing Dashboard
+                    </h1>
+                    <p className="text-gray-600">
+                        Test different breadcrumb configurations with perfect alignment
+                    </p>
+                </div>
 
-                {/* Card 1: Simple String Autocomplete */}
-                <div className="bg-white rounded-lg shadow-sm border p-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                        Simple Student Search
-                    </h3>
-                    <Autocomplete
-                        options={studentOptions}
-                        value={selectedStudent}
-                        onChange={(value) => setSelectedStudent(value as string)}
-                        placeholder="Search student by name..."
-                        theme="blue"
-                        size="md"
-                        label="Select Student"
-                        clearable
-                        showIcon
-                        className="mb-4"
-                    />
-                    {selectedStudent && (
-                        <div className="mt-3 p-3 bg-blue-50 rounded-md">
-                            <p className="text-sm text-blue-800">
-                                <strong>Selected:</strong> {selectedStudent}
-                            </p>
+                {/* Controls */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                    <h2 className="text-xl font-semibold mb-4">Customization Controls</h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Theme Selector */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Theme
+                            </label>
+                            <select
+                                value={currentTheme}
+                                onChange={(e) => setCurrentTheme(e.target.value as Theme)}
+                                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                                <option value="purple">Purple</option>
+                                <option value="pink">Pink</option>
+                                <option value="green">Green</option>
+                                <option value="blue">Blue</option>
+                            </select>
                         </div>
-                    )}
-                </div>
 
-                {/* Card 2: Multiple Selection with Groups */}
-                <div className="bg-white rounded-lg shadow-sm border p-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                        Multiple Teachers Selection
-                    </h3>
-                    <Autocomplete
-                        options={teacherOptions}
-                        value={selectedTeachers}
-                        onChange={(value) => setSelectedTeachers(value)}
-                        placeholder="Select multiple teachers..."
-                        theme="purple"
-                        size="md"
-                        label="Teachers"
-                        multiple={true}  // Explicitly set to true
-                        clearable
-                        groupBy="group"
-                        className="mb-4"
-                        customColors={{
-                            selectedOption: 'bg-purple-600 text-white',
-                            hoveredOption: 'bg-purple-50'
-                        }}
-                    />
-                    {selectedTeachers.length > 0 && (
-                        <div className="mt-3 p-3 bg-purple-50 rounded-md">
-                            <p className="text-sm text-purple-800 mb-2">
-                                <strong>Selected Teachers:</strong>
-                            </p>
-                            <ul className="text-xs text-purple-700">
-                                {selectedTeachers.map((teacher, index) => (
-                                    <li key={index}>
-                                        • {teacher.label} - {teacher.description}
-                                    </li>
-                                ))}
-                            </ul>
+                        {/* Separator Selector */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Separator Icon/Text
+                            </label>
+                            <select
+                                value={currentSeparator}
+                                onChange={(e) => setCurrentSeparator(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                                <option value="chevron">Chevron Right (Icon)</option>
+                                <option value="arrow">Arrow Right (Icon)</option>
+                                <option value="moveRight">Move Right (Icon)</option>
+                                <option value="arrowBig">Arrow Big Right (Icon)</option>
+                                <option value="slash">Slash (Icon)</option>
+                                <option value="dot">Dot (Icon)</option>
+                                <option value="triangle">Triangle (Icon)</option>
+                                <option value="star">Star (Icon)</option>
+                                <option value="heart">Heart (Icon)</option>
+                                <option value="plus">Plus (Icon)</option>
+                                <option value="minus">Minus (Icon)</option>
+                                <option value="chevronDown">Chevron Down (Icon)</option>
+                                <option value="x">X (Icon)</option>
+                                <option value="text">→ (Text)</option>
+                                <option value="textSlash">/ (Text)</option>
+                                <option value="textPipe">| (Text)</option>
+                                <option value="textBullet">• (Text)</option>
+                                <option value="textGreater">&gt; (Text)</option>
+                            </select>
                         </div>
-                    )}
-                </div>
-
-                {/* Card 3: Subject with Custom Colors */}
-                <div className="bg-white rounded-lg shadow-sm border p-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                        Subject Selection (Grouped)
-                    </h3>
-                    <Autocomplete
-                        options={subjectOptions}
-                        value={selectedSubject}
-                        onChange={(value) => setSelectedSubject(value as AutocompleteOption)}
-                        placeholder="Choose subject..."
-                        theme="green"
-                        size="lg"
-                        label="Subject"
-                        groupBy="group"
-                        clearable
-                        customColors={{
-                            selectedOption: 'bg-green-600 text-white',
-                            hoveredOption: 'bg-green-50',
-                            border: 'border-green-300 focus:border-green-500'
-                        }}
-                        className="mb-4"
-                    />
-                    {selectedSubject && (
-                        <div className="mt-3 p-3 bg-green-50 rounded-md">
-                            <p className="text-sm text-green-800">
-                                <strong>Selected:</strong> {selectedSubject.label}
-                            </p>
-                            <p className="text-xs text-green-600">
-                                Category: {(selectedSubject as any).group}
-                            </p>
-                        </div>
-                    )}
-                </div>
-
-                {/* Card 4: Async Loading */}
-                <div className="bg-white rounded-lg shadow-sm border p-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                        Async Student Search
-                    </h3>
-                    <Autocomplete
-                        options={[]}
-                        placeholder="Type to search students..."
-                        theme="pink"
-                        size="md"
-                        label="Dynamic Student Search"
-                        onLoadOptions={loadStudentsAsync}
-                        minInputLength={2}
-                        loadingText="Searching students..."
-                        noResultsText="No students found"
-                        helperText="Type at least 2 characters to search"
-                        className="mb-4"
-                        customColors={{
-                            selectedOption: 'bg-pink-600 text-white',
-                            hoveredOption: 'bg-pink-50'
-                        }}
-                    />
-                </div>
-
-                {/* Card 5: Free Solo Mode */}
-                <div className="bg-white rounded-lg shadow-sm border p-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                        Custom Value Entry
-                    </h3>
-                    <Autocomplete
-                        options={['Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5']}
-                        value={customValue}
-                        onChange={(value) => setCustomValue(value as string)}
-                        placeholder="Type or select class..."
-                        theme="dark"
-                        size="md"
-                        label="Class Selection (Free Solo)"
-                        freeSolo
-                        clearable
-                        helperText="You can type custom values or select from suggestions"
-                        className="mb-4"
-                    />
-                    {customValue && (
-                        <div className="mt-3 p-3 bg-gray-100 rounded-md">
-                            <p className="text-sm text-gray-800">
-                                <strong>Entered Value:</strong> {customValue}
-                            </p>
-                        </div>
-                    )}
-                </div>
-
-                {/* Card 6: Different Sizes Demo */}
-                <div className="bg-white rounded-lg shadow-sm border p-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                        Different Sizes
-                    </h3>
-
-                    <div className="space-y-4">
-                        <Autocomplete
-                            options={['Small Size', 'Option 2', 'Option 3']}
-                            placeholder="Small size..."
-                            theme="blue"
-                            size="sm"
-                            label="Small (sm)"
-                        />
-
-                        <Autocomplete
-                            options={['Medium Size', 'Option 2', 'Option 3']}
-                            placeholder="Medium size..."
-                            theme="purple"
-                            size="md"
-                            label="Medium (md)"
-                        />
-
-                        <Autocomplete
-                            options={['Large Size', 'Option 2', 'Option 3']}
-                            placeholder="Large size..."
-                            theme="green"
-                            size="lg"
-                            label="Large (lg)"
-                        />
                     </div>
                 </div>
 
-                {/* Card 7: Error States */}
-                <div className="bg-white rounded-lg shadow-sm border p-6 lg:col-span-2 xl:col-span-1">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                        Error & Disabled States
-                    </h3>
+                {/* Breadcrumb Examples */}
+                <div className="space-y-6">
 
-                    <div className="space-y-4">
-                        <Autocomplete
-                            options={['Option 1', 'Option 2', 'Option 3']}
-                            placeholder="With error..."
-                            theme="light"
+                    {/* Simple Dashboard */}
+                    <div className="bg-white rounded-lg shadow-sm p-6">
+                        <h3 className="text-lg font-semibold mb-4">Simple Dashboard Navigation</h3>
+                        <Breadcrumb
+                            items={breadcrumbScenarios.dashboard}
+                            theme={currentTheme}
+                            separator={getSeparatorIcon()}
                             size="md"
-                            label="Field with Error"
-                            error="This field is required"
-                            required
-                        />
-
-                        <Autocomplete
-                            options={['Option 1', 'Option 2', 'Option 3']}
-                            placeholder="Disabled field..."
-                            theme="light"
-                            size="md"
-                            label="Disabled Field"
-                            disabled
-                            value="Pre-selected value"
+                            onItemClick={handleBreadcrumbClick}
                         />
                     </div>
-                </div>
 
-                {/* Card 8: Custom Rendering */}
-                <div className="bg-white rounded-lg shadow-sm border p-6 lg:col-span-2">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                        Custom Option Rendering
-                    </h3>
-                    <Autocomplete
-                        options={teacherOptions}
-                        placeholder="Search teachers with custom display..."
-                        theme="blue"
-                        size="md"
-                        label="Teachers (Custom Rendering)"
-                        renderOption={(option) => (
-                            <div className="flex items-center gap-3 py-1">
-                                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                    <span className="text-blue-600 font-medium text-sm">
-                                        {option.label.split(' ').map(n => n[0]).join('')}
-                                    </span>
-                                </div>
-                                <div className="flex-1">
-                                    <div className="font-medium text-gray-900">{option.label}</div>
-                                    <div className="text-xs text-gray-500">{option.description}</div>
-                                </div>
-                                <div className="text-xs text-gray-400">
-                                    {(option as any).group}
-                                </div>
+                    {/* Students Section */}
+                    <div className="bg-white rounded-lg shadow-sm p-6">
+                        <h3 className="text-lg font-semibold mb-4">Students Section</h3>
+                        <Breadcrumb
+                            items={breadcrumbScenarios.students}
+                            theme={currentTheme}
+                            separator={getSeparatorIcon()}
+                            size="md"
+                            onItemClick={handleBreadcrumbClick}
+                        />
+                    </div>
+
+                    {/* Student Profile */}
+                    <div className="bg-white rounded-lg shadow-sm p-6">
+                        <h3 className="text-lg font-semibold mb-4">Student Profile Page</h3>
+                        <Breadcrumb
+                            items={breadcrumbScenarios.studentProfile}
+                            theme={currentTheme}
+                            separator={getSeparatorIcon()}
+                            size="md"
+                            onItemClick={handleBreadcrumbClick}
+                        />
+                    </div>
+
+                    {/* Deep Navigation with Overflow */}
+                    <div className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
+                        <h3 className="text-lg font-semibold mb-4">Deep Navigation (Overflow Handling)</h3>
+                        <Breadcrumb
+                            items={breadcrumbScenarios.deepNavigation}
+                            theme={currentTheme}
+                            separator={getSeparatorIcon()}
+                            size="md"
+                            maxItems={4}
+                            onItemClick={handleBreadcrumbClick}
+                        />
+                    </div>
+
+                    {/* Different Sizes with Perfect Alignment */}
+                    <div className="bg-white rounded-lg shadow-sm p-6">
+                        <h3 className="text-lg font-semibold mb-4">Different Sizes (Perfect Alignment)</h3>
+
+                        <div className="space-y-6">
+                            <div className="p-4 bg-gray-50 rounded-lg">
+                                <h4 className="text-sm font-medium text-gray-600 mb-3">Small Size</h4>
+                                <Breadcrumb
+                                    items={breadcrumbScenarios.studentProfile}
+                                    theme={currentTheme}
+                                    separator={getSeparatorIcon()}
+                                    size="sm"
+                                    onItemClick={handleBreadcrumbClick}
+                                />
                             </div>
-                        )}
-                        className="mb-4"
-                    />
-                </div>
-            </div>
 
-            {/* Results Summary */}
-            <div className="mt-8 bg-white rounded-lg shadow-sm border p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    Current Selections Summary
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-                    <div>
-                        <strong>Selected Student:</strong> {selectedStudent || 'None'}
+                            <div className="p-4 bg-gray-50 rounded-lg">
+                                <h4 className="text-sm font-medium text-gray-600 mb-3">Medium Size</h4>
+                                <Breadcrumb
+                                    items={breadcrumbScenarios.studentProfile}
+                                    theme={currentTheme}
+                                    separator={getSeparatorIcon()}
+                                    size="md"
+                                    onItemClick={handleBreadcrumbClick}
+                                />
+                            </div>
+
+                            <div className="p-4 bg-gray-50 rounded-lg">
+                                <h4 className="text-sm font-medium text-gray-600 mb-3">Large Size</h4>
+                                <Breadcrumb
+                                    items={breadcrumbScenarios.studentProfile}
+                                    theme={currentTheme}
+                                    separator={getSeparatorIcon()}
+                                    size="lg"
+                                    onItemClick={handleBreadcrumbClick}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <strong>Selected Teachers:</strong> {selectedTeachers.length} selected
+
+                    {/* Custom Colors with Different Icons */}
+                    <div className="bg-white rounded-lg shadow-sm p-6">
+                        <h3 className="text-lg font-semibold mb-4">Custom Colors with Creative Separators</h3>
+
+                        <div className="space-y-4">
+                            {/* Heart separator */}
+                            <div>
+                                <h4 className="text-xs font-medium text-gray-500 mb-2">With Heart Separator</h4>
+                                <Breadcrumb
+                                    items={breadcrumbScenarios.studentProfile}
+                                    theme={currentTheme}
+                                    separator={<Heart className="w-3 h-3" />}
+                                    size="md"
+                                    customColors={{
+                                        text: 'text-pink-600',
+                                        activeText: 'text-pink-900',
+                                        separator: 'text-pink-400',
+                                    }}
+                                    onItemClick={handleBreadcrumbClick}
+                                />
+                            </div>
+
+                            {/* Star separator */}
+                            <div>
+                                <h4 className="text-xs font-medium text-gray-500 mb-2">With Star Separator</h4>
+                                <Breadcrumb
+                                    items={breadcrumbScenarios.studentProfile}
+                                    theme={currentTheme}
+                                    separator={<Star className="w-3 h-3" />}
+                                    size="md"
+                                    customColors={{
+                                        text: 'text-yellow-600',
+                                        activeText: 'text-yellow-900',
+                                        separator: 'text-yellow-400',
+                                    }}
+                                    onItemClick={handleBreadcrumbClick}
+                                />
+                            </div>
+
+                            {/* Text bullet separator */}
+                            <div>
+                                <h4 className="text-xs font-medium text-gray-500 mb-2">With Text Bullet Separator</h4>
+                                <Breadcrumb
+                                    items={breadcrumbScenarios.studentProfile}
+                                    theme={currentTheme}
+                                    separator="•"
+                                    size="md"
+                                    customColors={{
+                                        text: 'text-indigo-600',
+                                        activeText: 'text-indigo-900',
+                                        separator: 'text-indigo-400',
+                                    }}
+                                    onItemClick={handleBreadcrumbClick}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <strong>Selected Subject:</strong> {selectedSubject?.label || 'None'}
+
+                    {/* Without Home Icon */}
+                    <div className="bg-white rounded-lg shadow-sm p-6">
+                        <h3 className="text-lg font-semibold mb-4">Without Home Icon</h3>
+                        <Breadcrumb
+                            items={breadcrumbScenarios.studentProfile}
+                            theme={currentTheme}
+                            separator={getSeparatorIcon()}
+                            size="md"
+                            showHomeIcon={false}
+                            onItemClick={handleBreadcrumbClick}
+                        />
                     </div>
-                    <div className="md:col-span-2 lg:col-span-1">
-                        <strong>Custom Value:</strong> {customValue || 'None'}
+
+                </div>
+
+                {/* Usage Guide */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                    <h2 className="text-xl font-semibold mb-4">Usage Guide</h2>
+
+                    <div className="prose max-w-none">
+                        <h3 className="text-lg font-medium">Basic Usage with Custom Icon Separator:</h3>
+                        <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+                            {`import { Breadcrumb } from '@/components/ui-components/Breadcrumb';
+import { Home, Users, Heart, Star, ArrowRight } from 'lucide-react';
+
+const breadcrumbItems = [
+  { label: 'Dashboard', href: '/dashboard', icon: <Home /> },
+  { label: 'Students', href: '/students', icon: <Users /> },
+];
+
+// With Icon Separator
+<Breadcrumb
+  items={breadcrumbItems}
+  separator={<ArrowRight className="w-4 h-4" />}
+  theme="light"
+  size="md"
+/>
+
+// With Creative Icon Separators
+<Breadcrumb
+  items={breadcrumbItems}
+  separator={<Heart className="w-3 h-3" />}
+  theme="purple"
+/>
+
+<Breadcrumb
+  items={breadcrumbItems}
+  separator={<Star className="w-3 h-3" />}
+  theme="blue"
+/>`}
+                        </pre>
+
+                        <h3 className="text-lg font-medium mt-6">Text-based Custom Separators:</h3>
+                        <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+                            {`// Text separators
+<Breadcrumb items={breadcrumbItems} separator="→" />
+<Breadcrumb items={breadcrumbItems} separator="•" />
+<Breadcrumb items={breadcrumbItems} separator="|" />
+<Breadcrumb items={breadcrumbItems} separator=">" />`}
+                        </pre>
                     </div>
                 </div>
+
             </div>
         </div>
     );
