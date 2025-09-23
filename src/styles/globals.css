@@ -124,3 +124,92 @@ body {
     border-color: var(--primary) !important;
     box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2) !important;
 }
+
+
+
+
+
+
+
+
+
+/* //offcanvas */
+
+/* Enhanced OffCanvas Animations */
+.offcanvas-enter {
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.offcanvas-exit {
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth Hardware Acceleration */
+.offcanvas-drawer {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+/* Position-based smooth transforms */
+.offcanvas-left {
+    transform: translateX(-100%);
+}
+
+.offcanvas-left.open {
+    transform: translateX(0);
+}
+
+.offcanvas-right {
+    transform: translateX(100%);
+}
+
+.offcanvas-right.open {
+    transform: translateX(0);
+}
+
+.offcanvas-top {
+    transform: translateY(-100%);
+}
+
+.offcanvas-top.open {
+    transform: translateY(0);
+}
+
+.offcanvas-bottom {
+    transform: translateY(100%);
+}
+
+.offcanvas-bottom.open {
+    transform: translateY(0);
+}
+
+/* Backdrop smooth transitions */
+.offcanvas-backdrop {
+    transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity;
+}
+
+.offcanvas-backdrop.open {
+    opacity: 1;
+}
+
+/* Content stagger animations */
+.offcanvas-content {
+    transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 100ms;
+}
+
+.offcanvas-content.open {
+    opacity: 1;
+    transition-delay: 150ms;
+}
+
+/* Enhanced easing functions */
+.ease-drawer {
+    transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.ease-backdrop {
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}

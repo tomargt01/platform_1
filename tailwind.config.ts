@@ -7,6 +7,19 @@ export default {
     ],
     theme: {
         extend: {
+            perspective: {
+                '1000': '1000px',
+            },
+            clipPath: {
+                'inset-0-0-0-0': 'inset(0% 0% 0% 0%)',
+                'inset-0-0-0-20': 'inset(0% 0% 0% 20%)',
+                'inset-0-20-0-0': 'inset(0% 20% 0% 0%)',
+                'inset-20-0-0-0': 'inset(20% 0% 0% 0%)',
+                'inset-0-0-20-0': 'inset(0% 0% 20% 0%)',
+            },
+            transformStyle: {
+                'preserve-3d': 'preserve-3d',
+            },
             colors: {
                 light: {
                     background: "#ffffff",

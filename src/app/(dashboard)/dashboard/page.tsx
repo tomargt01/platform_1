@@ -1,1003 +1,523 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
-import { flushSync } from 'react-dom';
+import React, { useState } from 'react';
+import {OffCanvas} from '#/components/ui/base/OffCanvas';
+import NavigationDrawer from '#/components/ui/base/OffCanvas/variants/NavigationDrawer';
+import FilterDrawer from '#/components/ui/base/OffCanvas/variants/FilterDrawer';
 import {
-    // Basic Modals (3)
-    ConfirmationModal,
-    AlertModal,
-    InformationModal,
-    // Form Modals (3)
-    InputModal,
-    WizardModal,
-    SearchModal,
-    // Content Display Modals (3)
-    LightboxModal,
-    PreviewModal,
-    FullscreenModal,
-    // Action Modals (3)
-    ActionChoiceModal,
-    ContextualModal,
-    ProgressModal,
-    // Interactive Modals (4)
-    DraggableModal,
-    DrawerModal,
-    BottomSheetModal,
-    ResizableModal,
-    // Feedback Modals (5)
-    SuccessModal,
-    ErrorModal,
-    WarningModal,
-    InfoModal,
-    LoadingModal,
-    // Specialized Modals (3)
-    LoginModal,
-    FilterModal,
-    ChatModal,
-    // Advanced Modals (4)
-    NestedModal,
-    MultiContentModal,
-    SplitModal,
-    PersistentModal,
-} from '#/components/ui/base/Modal';
-
-import {
-    Download, Archive, Trash2, BarChart3, Users, Settings, AlertTriangle,
-    Calendar, MessageCircle, Filter, Search, Eye, Grid, Layout, Move,
-    Maximize2, Info, CheckCircle, XCircle, Play, Upload, Edit, Plus
+    Menu,
+    Filter,
+    Bell,
+    Settings,
+    Search,
+    Plus,
+    MoreVertical,
+    TrendingUp,
+    Users,
+    BookOpen,
+    Calendar
 } from 'lucide-react';
 
-const Dashboard = () => {
+const DashboardTestPage = () => {
+    const [activeDrawer, setActiveDrawer] = useState<string | null>(null);
+    const [animationType, setAnimationType] = useState<'slide' | 'push' | 'overlay' | 'scale'>('slide');
+    const [position, setPosition] = useState<'left' | 'right' | 'top' | 'bottom'>('left');
+    const [theme, setTheme] = useState<'light' | 'dark' | 'purple' | 'pink' | 'green' | 'blue'>('light');
 
-    const contextButtonRef = useRef<HTMLButtonElement>(null);
-    const [lightboxIndex, setLightboxIndex] = useState(0);
-    // All 28 modal states
-    const [modals, setModals] = useState({
-        // Basic Modals (3)
-        confirmation: false,
-        alert: false,
-        information: false,
+    const openDrawer = (drawer: string) => setActiveDrawer(drawer);
+    const closeDrawer = () => setActiveDrawer(null);
 
-        // Form Modals (3)
-        input: false,
-        wizard: false,
-        search: false,
-
-        // Content Display Modals (3)
-        lightbox: false,
-        preview: false,
-        fullscreen: false,
-
-        // Action Modals (3)
-        actionChoice: false,
-        contextual: false,
-        progress: false,
-
-        // Interactive Modals (4)
-        draggable: false,
-        drawer: false,
-        bottomSheet: false,
-        resizable: false,
-
-        // Feedback Modals (5)
-        success: false,
-        error: false,
-        warning: false,
-        info: false,
-        loading: false,
-
-        // Specialized Modals (3)
-        login: false,
-        filter: false,
-        chat: false,
-
-        // Advanced Modals (4)
-        nested: false,
-        nestedChild: false,
-        multiContent: false,
-        split: false,
-        persistent: false,
-    });
-
-    // Stable modal handlers
-    const openModal = (modalType: keyof typeof modals) => {
-        flushSync(() => {
-            setModals(prev => ({ ...prev, [modalType]: true }));
-        });
-    };
-
-    const closeModal = (modalType: keyof typeof modals) => {
-        flushSync(() => {
-            setModals(prev => ({ ...prev, [modalType]: false }));
-        });
-    };
-
-    const [bottomSheetHeight, setBottomSheetHeight] = useState('50vh');
-
-    // Custom snap points for bottom sheet
-    const customSnapPoints = [
-        { label: 'Peek', height: '20vh', percentage: 20 },
-        { label: 'Half', height: '50vh', percentage: 50 },
-        { label: 'Large', height: '80vh', percentage: 80 },
-        { label: 'Almost Full', height: '95vh', percentage: 95 }
-    ];
-
-    // Sample data
-    const lightboxItems = [
+    const filterOptions = [
         {
-            type: 'image' as const,
-            src: 'https://picsum.photos/800/600?random=1',
-            title: 'School Building',
-            description: 'Main campus building with modern facilities'
+            key: 'grade',
+            label: 'Grade Level',
+            type: 'select' as const,
+            options: [
+                { value: '1', label: 'Grade 1' },
+                { value: '2', label: 'Grade 2' },
+                { value: '3', label: 'Grade 3' },
+                { value: '4', label: 'Grade 4' },
+                { value: '5', label: 'Grade 5' },
+            ]
         },
         {
-            type: 'image' as const,
-            src: 'https://picsum.photos/900/700?random=2',
-            title: 'Library',
-            description: 'State-of-the-art library with digital resources'
+            key: 'attendance',
+            label: 'Attendance Rate',
+            type: 'range' as const,
+            min: 0,
+            max: 100,
+            value: 80
         },
         {
-            type: 'image' as const,
-            src: 'https://picsum.photos/800/800?random=3',
-            title: 'Playground',
-            description: 'Outdoor sports and recreational facilities'
-        },
-    ];
-
-    const sampleMessages = [
-        { id: '1', sender: 'other' as const, message: 'Hello! How can I help you?', timestamp: new Date() },
-        { id: '2', sender: 'user' as const, message: 'I need help with my account', timestamp: new Date() },
-    ];
-
-    const inputFields = [
-        { name: 'name', label: 'Full Name', type: 'text', required: true },
-        { name: 'email', label: 'Email', type: 'email', required: true },
-        { name: 'phone', label: 'Phone', type: 'tel', required: false },
-    ];
-
-    const wizardSteps = [
-        {
-            title: 'Personal Info',
-            content: <div className="space-y-4">
-                <input type="text" placeholder="First Name" className="w-full p-2 border rounded" />
-                <input type="text" placeholder="Last Name" className="w-full p-2 border rounded" />
-            </div>
-        },
-        {
-            title: 'Address',
-            content: <div className="space-y-4">
-                <input type="text" placeholder="Street" className="w-full p-2 border rounded" />
-                <input type="text" placeholder="City" className="w-full p-2 border rounded" />
-            </div>
-        },
-        {
-            title: 'Review',
-            content: <div className="text-center py-8">
-                <h3>Please review your information</h3>
-            </div>
+            key: 'active',
+            label: 'Active Students Only',
+            type: 'checkbox' as const
         }
     ];
 
+    const stats = [
+        { label: 'Total Students', value: '1,234', icon: <Users className="w-6 h-6" />, color: 'text-blue-600' },
+        { label: 'Active Courses', value: '89', icon: <BookOpen className="w-6 h-6" />, color: 'text-green-600' },
+        { label: 'Events This Month', value: '23', icon: <Calendar className="w-6 h-6" />, color: 'text-purple-600' },
+        { label: 'Avg Performance', value: '87%', icon: <TrendingUp className="w-6 h-6" />, color: 'text-orange-600' },
+    ];
+
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
-            <div className="max-w-7xl mx-auto">
-                <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4">Complete Modal Testing Dashboard</h1>
-                    <div className="bg-blue-100 border border-blue-200 rounded-lg p-4">
-                        <p className="text-blue-800 font-medium">Testing All 28 Modal Types</p>
-                        <p className="text-blue-600 text-sm">Click any button to test the modal functionality</p>
-                    </div>
-                </div>
+        <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
+            {/* Header */}
+            <header className={`${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-b px-4 py-3`}>
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                        <button
+                            onClick={() => openDrawer('navigation')}
+                            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            <Menu className="w-5 h-5" />
+                        </button>
 
-                {/* Modal Testing Grid - 7 columns x 4 rows = 28 modals */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4 mb-8">
-
-                    {/* Basic Modals (3) */}
-                    <div className="space-y-2">
-                        <h3 className="text-sm font-semibold text-blue-600 mb-2">Basic (3)</h3>
-                        <button
-                            onClick={() => openModal('confirmation')}
-                            className="w-full p-2 bg-red-500 text-white text-xs rounded hover:bg-red-600 flex items-center justify-center"
-                        >
-                            <AlertTriangle size={14} className="mr-1" />
-                            Confirm
-                        </button>
-                        <button
-                            onClick={() => openModal('alert')}
-                            className="w-full p-2 bg-orange-500 text-white text-xs rounded hover:bg-orange-600 flex items-center justify-center"
-                        >
-                            <Info size={14} className="mr-1" />
-                            Alert
-                        </button>
-                        <button
-                            onClick={() => openModal('information')}
-                            className="w-full p-2 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 flex items-center justify-center"
-                        >
-                            <Info size={14} className="mr-1" />
-                            Info
-                        </button>
+                        <h1 className={`text-xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                            School ERP Dashboard
+                        </h1>
                     </div>
 
-                    {/* Form Modals (3) */}
-                    <div className="space-y-2">
-                        <h3 className="text-sm font-semibold text-green-600 mb-2">Forms (3)</h3>
-                        <button
-                            onClick={() => openModal('input')}
-                            className="w-full p-2 bg-green-500 text-white text-xs rounded hover:bg-green-600 flex items-center justify-center"
-                        >
-                            <Edit size={14} className="mr-1" />
-                            Input
-                        </button>
-                        <button
-                            onClick={() => openModal('wizard')}
-                            className="w-full p-2 bg-emerald-500 text-white text-xs rounded hover:bg-emerald-600 flex items-center justify-center"
-                        >
-                            <Play size={14} className="mr-1" />
-                            Wizard
-                        </button>
-                        <button
-                            onClick={() => openModal('search')}
-                            className="w-full p-2 bg-teal-500 text-white text-xs rounded hover:bg-teal-600 flex items-center justify-center"
-                        >
-                            <Search size={14} className="mr-1" />
-                            Search
-                        </button>
-                    </div>
-
-                    {/* Content Display (3) */}
-                    <div className="space-y-2">
-                        <h3 className="text-sm font-semibold text-purple-600 mb-2">Content (3)</h3>
-                        <button
-                            onClick={() => openModal('lightbox')}
-                            className="w-full p-2 bg-purple-500 text-white text-xs rounded hover:bg-purple-600 flex items-center justify-center"
-                        >
-                            <Eye size={14} className="mr-1" />
-                            Lightbox
-                        </button>
-                        <button
-                            onClick={() => openModal('preview')}
-                            className="w-full p-2 bg-indigo-500 text-white text-xs rounded hover:bg-indigo-600 flex items-center justify-center"
-                        >
-                            <Eye size={14} className="mr-1" />
-                            Preview
-                        </button>
-                        <button
-                            onClick={() => openModal('fullscreen')}
-                            className="w-full p-2 bg-violet-500 text-white text-xs rounded hover:bg-violet-600 flex items-center justify-center"
-                        >
-                            <Maximize2 size={14} className="mr-1" />
-                            Fullscreen
-                        </button>
-                    </div>
-
-                    {/* Action Modals (3) */}
-                    <div className="space-y-2">
-                        {/* Action Modals column */}
-                        <div className="space-y-2">
-                            <h3 className="text-sm font-semibold text-pink-600 mb-2">Actions (3)</h3>
-                            <button
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    openModal('actionChoice');
-                                }}
-                                className="w-full p-2 bg-pink-500 text-white text-xs rounded hover:bg-pink-600"
-                            >
-                                Choice
-                            </button>
-
-                            {/* FIXED: Contextual Modal Button */}
-                            <button
-                                ref={contextButtonRef}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    openModal('contextual');
-                                }}
-                                className="w-full p-2 bg-rose-500 text-white text-xs rounded hover:bg-rose-600"
-                            >
-                                Context
-                            </button>
-
-                            <button
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    openModal('progress');
-                                }}
-                                className="w-full p-2 bg-fuchsia-500 text-white text-xs rounded hover:bg-fuchsia-600"
-                            >
-                                Progress
-                            </button>
+                    <div className="flex items-center space-x-3">
+                        <div className="relative">
+                            <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                className="pl-9 pr-4 py-2 border rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
                         </div>
-                    </div>
 
-                    {/* Interactive Modals (4) */}
-                    <div className="space-y-2">
-                        <h3 className="text-sm font-semibold text-cyan-600 mb-2">Interactive (4)</h3>
                         <button
-                            onClick={() => openModal('draggable')}
-                            className="w-full p-2 bg-cyan-500 text-white text-xs rounded hover:bg-cyan-600 flex items-center justify-center"
+                            onClick={() => openDrawer('notifications')}
+                            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative"
                         >
-                            <Move size={14} className="mr-1" />
-                            Drag
+                            <Bell className="w-5 h-5" />
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                3
+                            </span>
                         </button>
-                        <button
-                            onClick={() => openModal('drawer')}
-                            className="w-full p-2 bg-sky-500 text-white text-xs rounded hover:bg-sky-600 flex items-center justify-center"
-                        >
-                            <Layout size={14} className="mr-1" />
-                            Drawer
-                        </button>
-                        <button
-                            onClick={() => openModal('bottomSheet')}
-                            className="w-full p-2 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 flex items-center justify-center"
-                        >
-                            <Layout size={14} className="mr-1" />
-                            Sheet
-                        </button>
-                        <button
-                            onClick={() => openModal('resizable')}
-                            className="w-full p-2 bg-indigo-500 text-white text-xs rounded hover:bg-indigo-600 flex items-center justify-center"
-                        >
-                            <Maximize2 size={14} className="mr-1" />
-                            Resize
-                        </button>
-                    </div>
 
-                    {/* Feedback Modals (5) */}
-                    <div className="space-y-2">
-                        <h3 className="text-sm font-semibold text-emerald-600 mb-2">Feedback (5)</h3>
                         <button
-                            onClick={() => openModal('success')}
-                            className="w-full p-2 bg-emerald-500 text-white text-xs rounded hover:bg-emerald-600 flex items-center justify-center"
+                            onClick={() => openDrawer('settings')}
+                            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                         >
-                            <CheckCircle size={14} className="mr-1" />
-                            Success
-                        </button>
-                        <button
-                            onClick={() => openModal('error')}
-                            className="w-full p-2 bg-red-500 text-white text-xs rounded hover:bg-red-600 flex items-center justify-center"
-                        >
-                            <XCircle size={14} className="mr-1" />
-                            Error
-                        </button>
-                        <button
-                            onClick={() => openModal('warning')}
-                            className="w-full p-2 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600 flex items-center justify-center"
-                        >
-                            <AlertTriangle size={14} className="mr-1" />
-                            Warning
-                        </button>
-                        <button
-                            onClick={() => openModal('info')}
-                            className="w-full p-2 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 flex items-center justify-center"
-                        >
-                            <Info size={14} className="mr-1" />
-                            Info
-                        </button>
-                        <button
-                            onClick={() => openModal('loading')}
-                            className="w-full p-2 bg-gray-500 text-white text-xs rounded hover:bg-gray-600 flex items-center justify-center"
-                        >
-                            <Upload size={14} className="mr-1" />
-                            Loading
-                        </button>
-                    </div>
-
-                    {/* Specialized Modals (3) + Advanced (4) */}
-                    <div className="space-y-2">
-                        <h3 className="text-sm font-semibold text-amber-600 mb-2">Special (7)</h3>
-                        <button
-                            onClick={() => openModal('login')}
-                            className="w-full p-2 bg-amber-500 text-white text-xs rounded hover:bg-amber-600 flex items-center justify-center"
-                        >
-                            <Users size={14} className="mr-1" />
-                            Login
-                        </button>
-                        <button
-                            onClick={() => openModal('filter')}
-                            className="w-full p-2 bg-orange-500 text-white text-xs rounded hover:bg-orange-600 flex items-center justify-center"
-                        >
-                            <Filter size={14} className="mr-1" />
-                            Filter
-                        </button>
-                        <button
-                            onClick={() => openModal('chat')}
-                            className="w-full p-2 bg-green-500 text-white text-xs rounded hover:bg-green-600 flex items-center justify-center"
-                        >
-                            <MessageCircle size={14} className="mr-1" />
-                            Chat
-                        </button>
-                        <button
-                            onClick={() => openModal('nested')}
-                            className="w-full p-2 bg-purple-500 text-white text-xs rounded hover:bg-purple-600 flex items-center justify-center"
-                        >
-                            <Layout size={14} className="mr-1" />
-                            Nested
-                        </button>
-                        <button
-                            onClick={() => openModal('multiContent')}
-                            className="w-full p-2 bg-indigo-500 text-white text-xs rounded hover:bg-indigo-600 flex items-center justify-center"
-                        >
-                            <Grid size={14} className="mr-1" />
-                            Multi
-                        </button>
-                        <button
-                            onClick={() => openModal('split')}
-                            className="w-full p-2 bg-violet-500 text-white text-xs rounded hover:bg-violet-600 flex items-center justify-center"
-                        >
-                            <Layout size={14} className="mr-1" />
-                            Split
-                        </button>
-                        <button
-                            onClick={() => openModal('persistent')}
-                            className="w-full p-2 bg-gray-500 text-white text-xs rounded hover:bg-gray-600 flex items-center justify-center"
-                        >
-                            <Settings size={14} className="mr-1" />
-                            Persist
+                            <Settings className="w-5 h-5" />
                         </button>
                     </div>
                 </div>
+            </header>
 
-                {/* Modal Counter */}
-                <div className="bg-white rounded-lg shadow p-6 mb-8">
-                    <h3 className="text-lg font-semibold mb-4">Modal Status Counter</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                        <div className="bg-blue-50 p-4 rounded">
-                            <div className="text-2xl font-bold text-blue-600">
-                                {Object.values(modals).filter(Boolean).length}
-                            </div>
-                            <div className="text-sm text-blue-800">Currently Open</div>
-                        </div>
-                        <div className="bg-green-50 p-4 rounded">
-                            <div className="text-2xl font-bold text-green-600">28</div>
-                            <div className="text-sm text-green-800">Total Types</div>
-                        </div>
-                        <div className="bg-purple-50 p-4 rounded">
-                            <div className="text-2xl font-bold text-purple-600">8</div>
-                            <div className="text-sm text-purple-800">Categories</div>
-                        </div>
-                        <div className="bg-orange-50 p-4 rounded">
-                            <div className="text-2xl font-bold text-orange-600">6</div>
-                            <div className="text-sm text-orange-800">Themes</div>
-                        </div>
-                    </div>
-                </div>
+            {/* Main Content */}
+            <main className="p-6">
+                {/* Controls for Testing */}
+                <div className={`${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} rounded-lg p-6 mb-6 shadow-sm`}>
+                    <h2 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                        OffCanvas Testing Controls
+                    </h2>
 
-                {/* ALL 28 MODALS - Complete Implementation */}
-
-                {/* 1. Basic Modals (3) */}
-                <ConfirmationModal
-                    isOpen={modals.confirmation}
-                    onClose={() => closeModal('confirmation')}
-                    title="Delete Item"
-                    message="Are you sure you want to delete this item? This action cannot be undone."
-                    type="danger"
-                    onConfirm={() => {
-                        alert('Item deleted!');
-                        closeModal('confirmation');
-                    }}
-                />
-
-                <AlertModal
-                    isOpen={modals.alert}
-                    onClose={() => closeModal('alert')}
-                    type="success"
-                    title="Operation Complete"
-                    message="Your request has been processed successfully."
-                />
-
-                <InformationModal
-                    isOpen={modals.information}
-                    onClose={() => closeModal('information')}
-                    showHeader={false}  // No header
-                    showFooter={false}  // No footer
-                    closeButtonPosition="body"
-                    content={
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                         <div>
-                            <h3 className="text-lg font-semibold mb-4">System Information</h3>
-                            <p>Current system status and details:</p>
-                            <ul className="list-disc pl-6 mt-2 space-y-1">
-                                <li>Version: 2.1.4</li>
-                                <li>Status: Active</li>
-                                <li>Users: 1,234 online</li>
-                                <li>Uptime: 99.9%</li>
-                            </ul>
+                            <label className="block text-sm font-medium mb-2">Animation Type</label>
+                            <select
+                                value={animationType}
+                                onChange={(e) => setAnimationType(e.target.value as any)}
+                                className="w-full p-2 border rounded-lg"
+                            >
+                                <option value="slide">Slide</option>
+                                <option value="push">Push</option>
+                                <option value="overlay">Overlay</option>
+                                <option value="scale">Scale</option>
+                            </select>
                         </div>
-                    }
-                />
 
-                <ContextualModal
-                    isOpen={modals.contextual}
-                    onClose={() => closeModal('contextual')}
-                    triggerElement={contextButtonRef.current}
-                    content={
-                        <div className="space-y-3">
-                            <h4 className="font-medium text-gray-900">Quick Actions</h4>
-                            <div className="space-y-2">
-                                <button
-                                    onClick={() => {
-                                        alert('Action 1 performed');
-                                        closeModal('contextual');
-                                    }}
-                                    className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
-                                >
-                                    📊 View Analytics
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        alert('Action 2 performed');
-                                        closeModal('contextual');
-                                    }}
-                                    className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
-                                >
-                                    ⚙️ Settings
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        alert('Action 3 performed');
-                                        closeModal('contextual');
-                                    }}
-                                    className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
-                                >
-                                    📝 Edit Profile
-                                </button>
-                            </div>
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Position</label>
+                            <select
+                                value={position}
+                                onChange={(e) => setPosition(e.target.value as any)}
+                                className="w-full p-2 border rounded-lg"
+                            >
+                                <option value="left">Left</option>
+                                <option value="right">Right</option>
+                                <option value="top">Top</option>
+                                <option value="bottom">Bottom</option>
+                            </select>
                         </div>
-                    }
-                />
 
-                {/* 2. Form Modals (3) */}
-                <InputModal
-                    isOpen={modals.input}
-                    onClose={() => closeModal('input')}
-                    // title="User Information"
-                    fields={inputFields}
-                    onSubmit={(data) => {
-                        console.log('Form submitted:', data);
-                        alert('Data saved!');
-                        closeModal('input');
-                    }}
-                />
-
-                <WizardModal
-                    isOpen={modals.wizard}
-                    onClose={() => closeModal('wizard')}
-                    steps={wizardSteps}
-                    onSubmit={(data) => {
-                        alert('Wizard completed!');
-                        closeModal('wizard');
-                    }}
-                />
-
-                <SearchModal
-                    isOpen={modals.search}
-                    onClose={() => closeModal('search')}
-                    onSearch={(query) => console.log('Searching:', query)}
-                    placeholder="Search students, teachers, classes..."
-                    results={
-                        <div className="space-y-2">
-                            <div className="p-3 hover:bg-gray-100 rounded cursor-pointer">John Doe - Student</div>
-                            <div className="p-3 hover:bg-gray-100 rounded cursor-pointer">Jane Smith - Teacher</div>
-                            <div className="p-3 hover:bg-gray-100 rounded cursor-pointer">Class 10-A</div>
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Theme</label>
+                            <select
+                                value={theme}
+                                onChange={(e) => setTheme(e.target.value as any)}
+                                className="w-full p-2 border rounded-lg"
+                            >
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                                <option value="purple">Purple</option>
+                                <option value="pink">Pink</option>
+                                <option value="green">Green</option>
+                                <option value="blue">Blue</option>
+                            </select>
                         </div>
-                    }
-                />
 
-                {/* 3. Content Display Modals (3) */}
-                <LightboxModal
-                    isOpen={modals.lightbox}
-                    onClose={() => closeModal('lightbox')}
-                    items={lightboxItems}
-                    currentIndex={lightboxIndex}
-                    onIndexChange={setLightboxIndex}
-                    showThumbnails={true}
-                    allowDownload={true}
-                />
-
-                <PreviewModal
-                    isOpen={modals.preview}
-                    onClose={() => closeModal('preview')}
-                    title="Student Report"
-                    previewType="document"
-                    content={
-                        <div className="space-y-4">
-                            <h3>Academic Performance Report</h3>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>Math: 95%</div>
-                                <div>Science: 92%</div>
-                                <div>English: 88%</div>
-                                <div>History: 85%</div>
-                            </div>
-                        </div>
-                    }
-                />
-
-                <FullscreenModal
-                    isOpen={modals.fullscreen}
-                    onClose={() => closeModal('fullscreen')}
-                    title="School Dashboard"
-                >
-                    <div className="p-6">
-                        <div className="grid grid-cols-4 gap-6 mb-8">
-                            <div className="bg-blue-500 text-white p-6 rounded">
-                                <h3 className="text-2xl font-bold">1,234</h3>
-                                <p>Students</p>
-                            </div>
-                            <div className="bg-green-500 text-white p-6 rounded">
-                                <h3 className="text-2xl font-bold">89</h3>
-                                <p>Teachers</p>
-                            </div>
-                            <div className="bg-purple-500 text-white p-6 rounded">
-                                <h3 className="text-2xl font-bold">24</h3>
-                                <p>Classes</p>
-                            </div>
-                            <div className="bg-orange-500 text-white p-6 rounded">
-                                <h3 className="text-2xl font-bold">96.5%</h3>
-                                <p>Attendance</p>
-                            </div>
-                        </div>
-                        <div className="h-64 bg-gray-100 rounded flex items-center justify-center">
-                            <p>Dashboard Content Goes Here</p>
+                        <div className="flex items-end">
+                            <button
+                                onClick={() => openDrawer('filter')}
+                                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            >
+                                <Filter className="w-4 h-4" />
+                                <span>Test Filters</span>
+                            </button>
                         </div>
                     </div>
-                </FullscreenModal>
 
-                {/* Continue with remaining 22 modals... */}
-                {/* 4-8: Action, Interactive, Feedback, Specialized, Advanced Modals */}
-
-                {/* Action Modals (3) */}
-                <ActionChoiceModal
-                    isOpen={modals.actionChoice}
-                    onClose={() => closeModal('actionChoice')}
-                    title="Choose Action"
-                    message="What would you like to do with selected items?"
-                    actions={[
-                        {
-                            label: 'Export Data',
-                            action: () => alert('Exporting...'),
-                            variant: 'primary',
-                            icon: <Download size={16} />
-                        },
-                        {
-                            label: 'Archive',
-                            action: () => alert('Archiving...'),
-                            variant: 'secondary',
-                            icon: <Archive size={16} />
-                        },
-                        {
-                            label: 'Delete',
-                            action: () => alert('Deleting...'),
-                            variant: 'danger',
-                            icon: <Trash2 size={16} />
-                        }
-                    ]}
-                />
-
-                <ProgressModal
-                    isOpen={modals.progress}
-                    onClose={() => closeModal('progress')}
-                    title="Processing Data"
-                    progress={65}
-                    status="loading"
-                    message="Uploading files..."
-                    onCancel={() => closeModal('progress')}
-                />
-
-                {/* Interactive Modals (4) */}
-                <DraggableModal
-                    isOpen={modals.draggable}
-                    onClose={() => closeModal('draggable')}
-                    title="Enhanced Draggable Modal"
-                    initialPosition={{ x: 50, y: 50 }}
-                    onPositionChange={(pos) => console.log('New position:', pos)}
-                >
-                    <div className="space-y-4">
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <h5 className="font-medium text-blue-800 mb-2">✅ Fixed Features:</h5>
-                            <ul className="text-sm text-blue-700 space-y-1">
-                                <li>• Drag from anywhere on modal (header, content, borders)</li>
-                                <li>• Correct directional movement (up = up, down = down)</li>
-                                <li>• Smooth dragging without jumps</li>
-                                <li>• Position indicator while dragging</li>
-                            </ul>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                            <div className="bg-gray-50 p-3 rounded">
-                                <div className="font-medium">Drag Test Areas:</div>
-                                <div className="text-gray-600">Try dragging from:</div>
-                                <div>• Header bar</div>
-                                <div>• This content area</div>
-                                <div>• Modal borders</div>
-                            </div>
-                            <div className="bg-gray-50 p-3 rounded">
-                                <div className="font-medium">Direction Test:</div>
-                                <div className="text-gray-600">Movement should be:</div>
-                                <div>• Up → Up</div>
-                                <div>• Down → Down</div>
-                                <div>• Left → Left</div>
-                                <div>• Right → Right</div>
-                            </div>
-                        </div>
-                    </div>
-                </DraggableModal>
-
-
-                <DrawerModal
-                    isOpen={modals.drawer}
-                    onClose={() => closeModal('drawer')}
-                    title="Settings Panel"
-                    position="right"
-                >
-                    <div className="space-y-4">
-                        <h4 className="font-medium">Account Settings</h4>
-                        <div className="space-y-2">
-                            <label className="flex items-center">
-                                <input type="checkbox" className="mr-2" />
-                                Email notifications
-                            </label>
-                            <label className="flex items-center">
-                                <input type="checkbox" className="mr-2" />
-                                Push notifications
-                            </label>
-                        </div>
+                    <div className="flex space-x-3">
                         <button
-                            onClick={() => {
-                                alert('Settings saved!');
-                                closeModal('drawer');
-                            }}
-                            className="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            onClick={() => openDrawer('basic')}
+                            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
                         >
-                            Save Settings
+                            Basic OffCanvas
+                        </button>
+                        <button
+                            onClick={() => openDrawer('content')}
+                            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                        >
+                            Content Heavy
+                        </button>
+                        <button
+                            onClick={() => openDrawer('form')}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                        >
+                            Form OffCanvas
                         </button>
                     </div>
-                </DrawerModal>
+                </div>
 
-                <BottomSheetModal
-                    isOpen={modals.bottomSheet}
-                    onClose={() => closeModal('bottomSheet')}
-                    title="Enhanced Bottom Sheet"
-                    initialHeight={bottomSheetHeight}
-                    minHeight={150}
-                    maxHeight={window.innerHeight - 50}
-                    snapPoints={customSnapPoints}
-                    onHeightChange={setBottomSheetHeight}
-                >
-                    <div className="space-y-4">
-                        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                            <h5 className="font-medium text-green-800 mb-2">✅ Enhanced Features:</h5>
-                            <ul className="text-sm text-green-700 space-y-1">
-                                <li>• Functional drag handle (grey bar at top)</li>
-                                <li>• Custom snap points with labels</li>
-                                <li>• Interactive dot indicators</li>
-                                <li>• Real-time height adjustment</li>
-                            </ul>
-                        </div>
-
-                        <div className="space-y-3">
-                            <div>
-                                <h6 className="font-medium mb-2">Instructions:</h6>
-                                <div className="text-sm text-gray-600 space-y-1">
-                                    <div>1. Drag the grey handle at top to resize</div>
-                                    <div>2. Click the dots at bottom for quick heights</div>
-                                    <div>3. Hover dots to see height labels</div>
-                                    <div>4. Current height: <span className="font-mono bg-gray-100 px-1 rounded">{bottomSheetHeight}</span></div>
+                {/* Stats Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    {stats.map((stat, index) => (
+                        <div key={index} className={`${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} rounded-lg p-6 shadow-sm`}>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{stat.label}</p>
+                                    <p className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                                        {stat.value}
+                                    </p>
                                 </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                {customSnapPoints.map((point, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => {
-                                            setBottomSheetHeight(point.height);
-                                            // This will trigger the onHeightChange in the modal
-                                        }}
-                                        className={`p-2 rounded text-sm transition-colors ${bottomSheetHeight === point.height
-                                                ? 'bg-blue-500 text-white'
-                                                : 'bg-gray-100 hover:bg-gray-200'
-                                            }`}
-                                    >
-                                        {point.label} ({point.percentage}%)
-                                    </button>
-                                ))}
+                                <div className={stat.color}>{stat.icon}</div>
                             </div>
                         </div>
+                    ))}
+                </div>
 
-                        {/* Sample content to test scrolling */}
-                        <div className="space-y-2">
-                            <h6 className="font-medium">Sample Content:</h6>
-                            {Array.from({ length: 20 }, (_, i) => (
-                                <div key={i} className="p-3 bg-gray-50 rounded">
-                                    Content item {i + 1} - This demonstrates scrolling in the bottom sheet
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </BottomSheetModal>
-
-                <ResizableModal
-                    isOpen={modals.resizable}
-                    onClose={() => closeModal('resizable')}
-                    title="Resizable Window"
-                >
-                    <div>
-                        <p>This modal can be resized!</p>
-                        <div className="mt-4 space-y-2">
-                            <div className="bg-gray-100 p-3 rounded">Item 1</div>
-                            <div className="bg-gray-100 p-3 rounded">Item 2</div>
-                            <div className="bg-gray-100 p-3 rounded">Item 3</div>
-                        </div>
-                    </div>
-                </ResizableModal>
-
-                {/* Feedback Modals (5) */}
-                <SuccessModal
-                    isOpen={modals.success}
-                    onClose={() => closeModal('success')}
-                    title="Success!"
-                    message="Operation completed successfully."
-                    actionText="View Details"
-                    onAction={() => alert('Details...')}
-                />
-
-                <ErrorModal
-                    isOpen={modals.error}
-                    onClose={() => closeModal('error')}
-                    title="Error Occurred"
-                    message="Something went wrong while processing your request."
-                    retryAction={() => alert('Retrying...')}
-                />
-
-                <WarningModal
-                    isOpen={modals.warning}
-                    onClose={() => closeModal('warning')}
-                    title="Warning"
-                    message="This action may have unintended consequences."
-                    onProceed={() => alert('Proceeding...')}
-                />
-
-                <InfoModal
-                    isOpen={modals.info}
-                    onClose={() => closeModal('info')}
-                    title="Information"
-                    message="Here's some important information:"
-                    details={[
-                        'System version: 2.1.4',
-                        'Last update: Today',
-                        'Status: Operational'
-                    ]}
-                />
-
-                <LoadingModal
-                    isOpen={modals.loading}
-                    onClose={() => closeModal('loading')} // Now works
-                    title="Processing Data..."
-                    message="Please wait while we process your request"
-                    showProgress={true}
-                    progress={75}
-                    allowClose={true} // NEW: Allow user to close
-                />
-
-                {/* Specialized Modals (3) */}
-                <LoginModal
-                    isOpen={modals.login}
-                    onClose={() => closeModal('login')}
-                    onLogin={(credentials) => {
-                        alert(`Login: ${credentials.email}`);
-                        closeModal('login');
-                    }}
-                />
-
-                <FilterModal
-                    isOpen={modals.filter}
-                    onClose={() => closeModal('filter')}
-                    filters={[
-                        {
-                            name: 'category',
-                            label: 'Category',
-                            type: 'select',
-                            options: [
-                                { value: 'students', label: 'Students' },
-                                { value: 'teachers', label: 'Teachers' }
-                            ]
-                        }
-                    ]}
-                    onApply={(filters) => {
-                        console.log('Filters:', filters);
-                        closeModal('filter');
-                    }}
-                    onReset={() => alert('Reset filters')}
-                />
-
-                <ChatModal
-                    isOpen={modals.chat}
-                    onClose={() => closeModal('chat')}
-                    title="Support Chat"
-                    messages={sampleMessages}
-                    onSendMessage={(msg) => console.log('New message:', msg)}
-                />
-
-                {/* Advanced Modals (4) */}
-                <NestedModal
-                    isOpen={modals.nested}
-                    onClose={() => closeModal('nested')}
-                    title="Parent Modal"
-                    nested={{
-                        title: 'Child Modal',
-                        content: <div className="text-center p-4">This is a nested modal!</div>,
-                        isOpen: modals.nestedChild,
-                        onClose: () => closeModal('nestedChild')
-                    }}
-                >
-                    <div>
-                        <p>This is the parent modal.</p>
-                        <button
-                            onClick={() => openModal('nestedChild')}
-                            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
-                        >
-                            Open Child Modal
-                        </button>
-                    </div>
-                </NestedModal>
-
-                <MultiContentModal
-                    isOpen={modals.multiContent}
-                    onClose={() => closeModal('multiContent')}
-                    tabs={[
-                        {
-                            id: 'tab1',
-                            label: 'Overview',
-                            icon: <BarChart3 size={16} />,
-                            content: <div className="p-4">Overview content here</div>
-                        },
-                        {
-                            id: 'tab2',
-                            label: 'Users',
-                            icon: <Users size={16} />,
-                            content: <div className="p-4">Users content here</div>
-                        },
-                        {
-                            id: 'tab3',
-                            label: 'Settings',
-                            icon: <Settings size={16} />,
-                            content: <div className="p-4">Settings content here</div>
-                        }
-                    ]}
-                />
-
-                <SplitModal
-                    isOpen={modals.split}
-                    onClose={() => closeModal('split')}
-                    title="Split View"
-                    leftTitle="Left Panel"
-                    rightTitle="Right Panel"
-                    leftContent={<div className="p-4">Left side content</div>}
-                    rightContent={<div className="p-4">Right side content</div>}
-                />
-
-                <PersistentModal
-                    isOpen={modals.persistent}
-                    onClose={() => { }}  // Can't close easily
-                    title="Persistent Modal"
-                    warningMessage="Complete the form to close this modal"
-                >
+                {/* Sample Content */}
+                <div className={`${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} rounded-lg p-6 shadow-sm`}>
+                    <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                        Recent Activities
+                    </h3>
                     <div className="space-y-4">
-                        <p>This modal requires action before closing.</p>
-                        <input type="text" placeholder="Required field" className="w-full p-2 border rounded" />
-                        <button
-                            onClick={() => closeModal('persistent')}
-                            className="px-4 py-2 bg-blue-600 text-white rounded"
-                        >
-                            Complete & Close
+                        {[1, 2, 3, 4, 5].map((item) => (
+                            <div key={item} className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                                        <Users className="w-4 h-4 text-blue-600" />
+                                    </div>
+                                    <div>
+                                        <p className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                                            Student enrollment #{item}
+                                        </p>
+                                        <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                                            2 minutes ago
+                                        </p>
+                                    </div>
+                                </div>
+                                <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                                    <MoreVertical className="w-4 h-4" />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </main>
+
+            {/* OffCanvas Components */}
+            <NavigationDrawer
+                isOpen={activeDrawer === 'navigation'}
+                onClose={closeDrawer}
+                position={position}
+                theme={theme}
+                animationType={animationType}
+                user={{
+                    name: 'Admin User',
+                    role: 'School Administrator'
+                }}
+                onNavigate={(item) => {
+                    console.log('Navigate to:', item);
+                    closeDrawer();
+                }}
+            />
+
+            <FilterDrawer
+                isOpen={activeDrawer === 'filter'}
+                onClose={closeDrawer}
+                position={position}
+                theme={theme}
+                animationType={animationType}
+                filters={filterOptions}
+                onApplyFilters={(filters) => {
+                    console.log('Applied filters:', filters);
+                }}
+                onResetFilters={() => {
+                    console.log('Filters reset');
+                }}
+            />
+
+            {/* Basic OffCanvas */}
+            <OffCanvas
+                isOpen={activeDrawer === 'basic'}
+                onClose={closeDrawer}
+                position={position}
+                theme={theme}
+                animationType={animationType}
+                header={<h3 className="text-lg font-medium">Basic OffCanvas</h3>}
+            >
+                <div className="p-4">
+                    <p>This is a basic OffCanvas component with minimal content.</p>
+                    <p className="mt-4 text-sm text-gray-600">
+                        You can customize the position, theme, and animation type using the controls above.
+                    </p>
+                </div>
+            </OffCanvas>
+
+            {/* Content Heavy OffCanvas */}
+            <OffCanvas
+                isOpen={activeDrawer === 'content'}
+                onClose={closeDrawer}
+                position={position}
+                theme={theme}
+                animationType={animationType}
+                size="lg"
+                header={
+                    <div className="flex items-center space-x-2">
+                        <BookOpen className="w-5 h-5" />
+                        <span>Content Heavy Example</span>
+                    </div>
+                }
+                footer={
+                    <div className="flex space-x-3">
+                        <button className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors">
+                            Cancel
+                        </button>
+                        <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            Save Changes
                         </button>
                     </div>
-                </PersistentModal>
-            </div>
+                }
+            >
+                <div className="p-4 space-y-4">
+                    <h4 className="font-medium">Student Information</h4>
+                    <div className="space-y-2">
+                        <p><strong>Name:</strong> John Doe</p>
+                        <p><strong>Grade:</strong> 10th Grade</p>
+                        <p><strong>Roll Number:</strong> 2024001</p>
+                        <p><strong>Contact:</strong> +91 98765 43210</p>
+                    </div>
+
+                    <h4 className="font-medium mt-6">Academic Performance</h4>
+                    <div className="space-y-2">
+                        <div className="flex justify-between">
+                            <span>Mathematics</span>
+                            <span className="font-medium text-green-600">A+</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>Science</span>
+                            <span className="font-medium text-green-600">A</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>English</span>
+                            <span className="font-medium text-blue-600">B+</span>
+                        </div>
+                    </div>
+
+                    <h4 className="font-medium mt-6">Attendance Record</h4>
+                    <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                        <p>Overall Attendance: <span className="font-medium text-green-600">95%</span></p>
+                        <p className="text-sm text-gray-600 mt-1">Present: 190 days | Absent: 10 days</p>
+                    </div>
+                </div>
+            </OffCanvas>
+
+            {/* Form OffCanvas */}
+            <OffCanvas
+                isOpen={activeDrawer === 'form'}
+                onClose={closeDrawer}
+                position={position}
+                theme={theme}
+                animationType={animationType}
+                size="md"
+                header={
+                    <div className="flex items-center space-x-2">
+                        <Plus className="w-5 h-5" />
+                        <span>Add New Student</span>
+                    </div>
+                }
+                footer={
+                    <div className="flex space-x-3">
+                        <button
+                            onClick={closeDrawer}
+                            className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            Add Student
+                        </button>
+                    </div>
+                }
+            >
+                <div className="p-4">
+                    <form className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Full Name</label>
+                            <input
+                                type="text"
+                                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter student name"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Email</label>
+                            <input
+                                type="email"
+                                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter email address"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Grade Level</label>
+                            <select className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Select grade</option>
+                                <option value="1">Grade 1</option>
+                                <option value="2">Grade 2</option>
+                                <option value="3">Grade 3</option>
+                                <option value="4">Grade 4</option>
+                                <option value="5">Grade 5</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Phone Number</label>
+                            <input
+                                type="tel"
+                                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="+91 98765 43210"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Address</label>
+                            <textarea
+                                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                rows={3}
+                                placeholder="Enter complete address"
+                            />
+                        </div>
+                    </form>
+                </div>
+            </OffCanvas>
+
+            {/* Notifications OffCanvas */}
+            <OffCanvas
+                isOpen={activeDrawer === 'notifications'}
+                onClose={closeDrawer}
+                position="right"
+                theme={theme}
+                animationType="slide"
+                size="sm"
+                header={
+                    <div className="flex items-center space-x-2">
+                        <Bell className="w-5 h-5" />
+                        <span>Notifications</span>
+                        <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">3</span>
+                    </div>
+                }
+            >
+                <div className="p-4 space-y-4">
+                    {[
+                        { title: 'New student enrolled', time: '2 minutes ago', type: 'success' },
+                        { title: 'Payment overdue', time: '1 hour ago', type: 'warning' },
+                        { title: 'System maintenance scheduled', time: '3 hours ago', type: 'info' }
+                    ].map((notification, index) => (
+                        <div key={index} className="p-3 border rounded-lg">
+                            <div className={`w-2 h-2 rounded-full mb-2 ${notification.type === 'success' ? 'bg-green-500' :
+                                    notification.type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
+                                }`} />
+                            <h4 className="font-medium text-sm">{notification.title}</h4>
+                            <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
+                        </div>
+                    ))}
+                </div>
+            </OffCanvas>
+
+            {/* Settings OffCanvas */}
+            <OffCanvas
+                isOpen={activeDrawer === 'settings'}
+                onClose={closeDrawer}
+                position="right"
+                theme={theme}
+                animationType="slide"
+                header={
+                    <div className="flex items-center space-x-2">
+                        <Settings className="w-5 h-5" />
+                        <span>Settings</span>
+                    </div>
+                }
+            >
+                <div className="p-4 space-y-6">
+                    <div>
+                        <h4 className="font-medium mb-3">Appearance</h4>
+                        <div className="space-y-2">
+                            <label className="flex items-center space-x-2">
+                                <input type="radio" name="theme" value="light" className="rounded" />
+                                <span>Light Theme</span>
+                            </label>
+                            <label className="flex items-center space-x-2">
+                                <input type="radio" name="theme" value="dark" className="rounded" />
+                                <span>Dark Theme</span>
+                            </label>
+                            <label className="flex items-center space-x-2">
+                                <input type="radio" name="theme" value="auto" className="rounded" />
+                                <span>Auto (System)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 className="font-medium mb-3">Notifications</h4>
+                        <div className="space-y-2">
+                            <label className="flex items-center justify-between">
+                                <span>Email notifications</span>
+                                <input type="checkbox" className="rounded" />
+                            </label>
+                            <label className="flex items-center justify-between">
+                                <span>Push notifications</span>
+                                <input type="checkbox" className="rounded" />
+                            </label>
+                            <label className="flex items-center justify-between">
+                                <span>SMS notifications</span>
+                                <input type="checkbox" className="rounded" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </OffCanvas>
         </div>
     );
 };
 
-export default Dashboard;
+export default DashboardTestPage;
