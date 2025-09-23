@@ -1,30 +1,56 @@
-import type { ReactNode } from "react";
-import type { HTMLMotionProps } from "framer-motion";
-
-type ConflictingProps =
-    | "onDrag"
-    | "onDragEnd"
-    | "onDragEnter"
-    | "onDragExit"
-    | "onDragLeave"
-    | "onDragOver"
-    | "onDragStart"
-    | "onDrop"
-    | "onAnimationStart"
-    | "onAnimationEnd"
-    | "onAnimationIteration";
-
 export type Theme = "light" | "dark" | "purple" | "pink" | "green" | "blue";
 
-export type ToastVariant = "info" | "success" | "inProgress" | "error";
+export type CollapseDirection = "vertical" | "horizontal";
 
-export interface ToastProps
-    extends Omit<HTMLMotionProps<"div">, "title" | ConflictingProps> {
-    variant?: ToastVariant; // Restricted to defined variants
+export type CollapseVariant = "default" | "accordion" | "card" | "minimal";
+
+export type CollapseSize = "sm" | "md" | "lg";
+
+export interface CollapseProps {
+    children: React.ReactNode;
+    isOpen: boolean;
+    onToggle?: () => void;
+    direction?: CollapseDirection;
+    variant?: CollapseVariant;
     theme?: Theme;
-    title?: string | ReactNode;
-    description?: string | ReactNode;
-    customIcon?: ReactNode;
+    size?: CollapseSize;
+    title?: string;
+    icon?: React.ReactNode;
+    disabled?: boolean;
     duration?: number;
-    onDismiss?: () => void;
+    className?: string;
+    headerClassName?: string;
+    contentClassName?: string;
+    customColors?: {
+        background?: string;
+        border?: string;
+        text?: string;
+        headerBackground?: string;
+        headerText?: string;
+    };
+}
+
+export interface AccordionProps {
+    items: AccordionItem[];
+    theme?: Theme;
+    variant?: CollapseVariant;
+    size?: CollapseSize;
+    allowMultiple?: boolean;
+    defaultOpenItems?: number[];
+    className?: string;
+    customColors?: {
+        background?: string;
+        border?: string;
+        text?: string;
+        headerBackground?: string;
+        headerText?: string;
+    };
+}
+
+export interface AccordionItem {
+    id: number;
+    title: string;
+    content: React.ReactNode;
+    icon?: React.ReactNode;
+    disabled?: boolean;
 }

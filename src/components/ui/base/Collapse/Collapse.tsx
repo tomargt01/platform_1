@@ -1,102 +1,153 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { X } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { toastVariants } from "./Collapse.styles";
-import type { ToastProps } from "./Collapse.types";
-import { cn } from "#/lib/utils/cn";
-import { motion, AnimatePresence } from "framer-motion";
+'use client';
 
-export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
-    (
-        {
-            className,
-            variant = "info", // Default to "info" from the union type
-            theme = "light",
-            title,
-            description,
-            customIcon,
-            duration = 5000,
-            onDismiss,
-            ...props
-        },
-        ref
-    ) => {
-        const { t } = useTranslation();
-        const [isVisible, setIsVisible] = useState(true);
-        const [progress, setProgress] = useState(100);
+import React, { useState, useRef, useEffect } from 'react';
+import { ChevronDown, ChevronRight, ChevronUp, ChevronLeft } from 'lucide-react';
+import { CollapseProps } from './Collapse.types';
+import { getThemeColors, getSizeClasses, getVariantClasses } from './Collapse.styles';
 
-        useEffect(() => {
-            const timer = setTimeout(() => {
-                setIsVisible(false);
-                onDismiss?.();
-            }, duration);
+const Collapse: React.FC<CollapseProps> = ({
+    children,
+    isOpen,
+    onToggle,
+    direction = 'vertical',
+    variant = 'default',
+    theme = 'light',
+    size = 'md',
+    title,
+    icon,
+    disabled = false,
+    duration = 300,
+    className = '',
+    headerClassName = '',
+    contentClassName = '',
+    customColors,
+}) => {
+    const contentRef = useRef<HTMLDivElement>(null);
+    const [contentHeight, setContentHeight] = useState<number>(0);
+    const [contentWidth, setContentWidth] = useState<number>(0);
 
-            const progressInterval = setInterval(() => {
-                setProgress((prev) => (prev > 0 ? prev - (100 / (duration / 1000)) : 0));
-            }, 100);
+    const themeColors = getThemeColors(theme);
+    const sizeClasses = getSizeClasses(size);
+    const variantClasses = getVariantClasses(variant);
 
-            return () => {
-                clearTimeout(timer);
-                clearInterval(progressInterval);
-            };
-        }, [duration, onDismiss]);
+    // Measure content dimensions
+    useEffect(() => {
+        if (contentRef.current) {
+            if (direction === 'vertical') {
+                setContentHeight(contentRef.current.scrollHeight);
+            } else {
+                setContentWidth(contentRef.current.scrollWidth);
+            }
+        }
+    }, [children, direction]);
 
-        const handleDismiss = () => {
-            setIsVisible(false);
-            onDismiss?.();
+    // Update dimensions when content changes
+    useEffect(() => {
+        if (contentRef.current && isOpen) {
+            if (direction === 'vertical') {
+                setContentHeight(contentRef.current.scrollHeight);
+            } else {
+                setContentWidth(contentRef.current.scrollWidth);
+            }
+        }
+    }, [isOpen, children, direction]);
+
+    const getCollapseIcon = () => {
+        if (direction === 'vertical') {
+            return isOpen ? <ChevronUp className={sizeClasses.icon} /> : <ChevronDown className={sizeClasses.icon} />;
+        } else {
+            return isOpen ? <ChevronLeft className={sizeClasses.icon} /> : <ChevronRight className={sizeClasses.icon} />;
+        }
+    };
+
+    const getContentStyle = () => {
+        const baseStyle = {
+            transition: `all ${duration}ms cubic-bezier(0.4, 0, 0.2, 1)`,
+            overflow: 'hidden',
         };
 
-        if (!isVisible) return null;
+        if (direction === 'vertical') {
+            return {
+                ...baseStyle,
+                height: isOpen ? `${contentHeight}px` : '0px',
+                width: 'auto',
+            };
+        } else {
+            return {
+                ...baseStyle,
+                width: isOpen ? `${contentWidth}px` : '0px',
+                height: 'auto',
+            };
+        }
+    };
 
-        return (
-            <AnimatePresence>
-                <motion.div
-                    ref={ref}
-                    role="status"
-                    aria-live="polite"
-                    data-testid="toast"
-                    className={cn(
-                        toastVariants({ variant, theme }),
-                        "fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[300px] rounded-lg shadow-lg",
-                        className
-                    )}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    {...props}
+    const handleToggle = () => {
+        if (!disabled && onToggle) {
+            onToggle();
+        }
+    };
+
+    return (
+        <div
+            className={`
+        ${variantClasses.container}
+        ${themeColors.background}
+        ${themeColors.border}
+        ${themeColors.shadow}
+        ${className}
+      `}
+        >
+            {title && (
+                <button
+                    type="button"
+                    onClick={handleToggle}
+                    disabled={disabled}
+                    className={`
+            w-full flex items-center justify-between text-left transition-colors
+            ${variantClasses.header}
+            ${themeColors.headerBackground}
+            ${customColors?.headerBackground || ''}
+            ${themeColors.headerText}
+            ${customColors?.headerText || ''}
+            ${sizeClasses.header}
+            ${disabled ? 'opacity-50 cursor-not-allowed' : `${themeColors.hover} cursor-pointer`}
+            ${headerClassName}
+          `}
                 >
-                    <div className="flex items-center justify-between p-3">
-                        <div className="flex items-center gap-2">
-                            {customIcon || <div className="w-5 h-5" />}
-                            <div>
-                                {title && (
-                                    <p className="text-sm font-medium">{title}</p>
-                                )}
-                                {description && (
-                                    <p className="text-sm">{description}</p>
-                                )}
-                            </div>
-                        </div>
-                        <button
-                            onClick={handleDismiss}
-                            className="p-1 hover:bg-[var(--accent)]/20 rounded focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
-                            aria-label={t("toast.dismiss")}
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
+                    <div className="flex items-center space-x-3">
+                        {icon && <span className="flex-shrink-0">{icon}</span>}
+                        <span className="font-medium">{title}</span>
                     </div>
-                    <motion.div
-                        className="h-1 rounded-b-lg"
-                        initial={{ width: "100%" }}
-                        animate={{ width: `${progress}%` }}
-                        transition={{ duration: duration / 1000 }}
-                    />
-                </motion.div>
-            </AnimatePresence>
-        );
-    }
-);
+                    <span className={`flex-shrink-0 transition-transform duration-${duration}`}>
+                        {getCollapseIcon()}
+                    </span>
+                </button>
+            )}
 
-Toast.displayName = "Toast";
+            <div
+                style={getContentStyle()}
+                className={`
+          ${variantClasses.content}
+          ${themeColors.background}
+          ${customColors?.background || ''}
+          ${themeColors.border}
+          ${customColors?.border || ''}
+        `}
+            >
+                <div
+                    ref={contentRef}
+                    className={`
+            ${themeColors.text}
+            ${customColors?.text || ''}
+            ${sizeClasses.content}
+            ${contentClassName}
+          `}
+                >
+                    {children}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Collapse;
