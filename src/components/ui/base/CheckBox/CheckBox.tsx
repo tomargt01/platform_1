@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { checkboxVariants } from "./CheckBox.styles";
 import type { CheckboxProps } from "./CheckBox.types";
 import { cn } from "#/lib/utils/cn";
@@ -25,7 +24,6 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         },
         ref
     ) => {
-        const { t } = useTranslation();
         const isChecked = props.checked || false;
 
         // Intent-specific colors
@@ -40,8 +38,6 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         const intentColor = getIntentColor();
         const effectivePrimary = borderColor || circleColor || "var(--primary)";
         const effectiveBg = bgColor || "var(--primary)";
-
-        console.log(intentColor, 'intentColor', intent);
 
         const contentClass = cn(
             `text-[${intentColor}]`,

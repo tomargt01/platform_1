@@ -213,3 +213,43 @@ body {
 .ease-backdrop {
     transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+
+
+
+
+/* Skeleton */
+
+.skeleton-base {
+    animation: pulse 1.5s infinite;
+    background: #e5e7eb;
+    min-height: 12px;
+    display: block;
+}
+
+.sk-size-sm {
+    min-height: 8px;
+}
+
+.sk-size-md {
+    min-height: 12px;
+}
+
+.sk-size-lg {
+    min-height: 24px;
+}
+
+/* Add more classes based on your style file */
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
