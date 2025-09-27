@@ -85,6 +85,16 @@ body {
     color: var(--text);
 }
 
+
+
+
+
+
+
+
+
+
+
 [data-intent="primary"]:focus {
     border-color: #3b82f6 !important;
 }
@@ -252,4 +262,18 @@ body {
     100% {
         opacity: 1;
     }
+}
+
+
+
+
+
+
+
+
+
+/* tabs  */
+
+button{
+    box-shadow: none !important;
 }
