@@ -1,107 +1,55 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Tabs, TabItem } from '#/components/ui/base/Tabs';
-import { FaHome, FaEnvelope, FaUser } from 'react-icons/fa';
+import { Textarea } from "#/components/ui/base/Textarea";
+// import all supported icons, helpers, etc.
 
-const exampleTabs: TabItem[] = [
-    {
-        id: 'home',
-        label: 'Home',
-        icon: <FaHome />,
-        content: <div>Home content here</div>,
-    },
-    {
-        id: 'messages',
-        label: 'Messages',
-        badge: 5,
-        icon: <FaEnvelope />,
-        closable: true,
-        content: <div>Messages content with badge</div>,
-    },
-    {
-        id: 'profile',
-        label: 'Profile',
-        icon: <FaUser />,
-        disabled: false,
-        content: <div>User Profile content</div>,
-    },
-    {
-        id: 'disabled',
-        label: 'Disabled',
-        disabled: true,
-        content: <div>This tab is disabled</div>,
-    },
-];
-
-export default function TabsExample() {
-    const [activeId, setActiveId] = useState('home');
-    const [dynamicTabs, setDynamicTabs] = useState(exampleTabs);
-
-    const handleTabClose = (id: string) => {
-        setDynamicTabs((prev) => prev.filter((tab) => tab.id !== id));
-        if (activeId === id && dynamicTabs.length > 1) {
-            const nextTab = dynamicTabs.find((t) => t.id !== id);
-            if (nextTab) setActiveId(nextTab.id);
-        }
-    };
+export default function TextareaDashboard() {
+    // local theme switcher logic here
 
     return (
-        <div className="p-6 space-y-10">
-            <h2 className="text-2xl font-semibold">Tabs Component Dashboard</h2>
+        <div className="space-y-8">
+            <h1>Textarea Component Dashboard</h1>
 
             <section>
-                <h3 className="mb-2 font-medium">Horizontal, Rounded, Medium (Default)</h3>
-                <Tabs
-                    tabs={dynamicTabs}
-                    activeTabId={activeId}
-                    onTabChange={setActiveId}
-                    onTabClose={handleTabClose}
-                    shape="rounded"
-                    orientation="horizontal"
-                    size="md"
-                    theme="light"
-                    scrollable
-                    draggable
-                    sticky
-                    lazyLoad
-                    keyboardNav
-                    animated
-                    multiRow
-                    customSlotEnd={<button onClick={() => alert('Add tab clicked')} className="ml-2 px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition">Add Tab</button>}
-                />
+                <h2>Sizes & Shapes</h2>
+                <Textarea size="sm" placeholder="Small" />
+                <Textarea size="md" placeholder="Medium" />
+                <Textarea size="lg" placeholder="Large" />
+                <Textarea rounded="pill" placeholder="Rounded Pill" />
+                <Textarea rounded="none" placeholder="Sharp edges" />
+                <Textarea stretch="no" placeholder="Resize disabled" />
+
+                <Textarea stretch="yes" placeholder="Resize enabled" />
+
+                {/* ...theme switcher here */}
             </section>
 
             <section>
-                <h3 className="mb-2 font-medium">Vertical Tabs, Pill Shape, Large Size</h3>
-                <Tabs
-                    tabs={exampleTabs}
-                    activeTabId={activeId}
-                    onTabChange={setActiveId}
-                    shape="pill"
-                    orientation="vertical"
-                    size="lg"
-                    theme="dark"
-                    scrollable={false}
-                    draggable={false}
-                />
+                <h2>Functional States</h2>
+                <Textarea errorMessage="Field required" status="error" />
+                <Textarea warningMessage="Be careful" status="warning" />
+                <Textarea successMessage="All good!" status="success" />
+                <Textarea disabled placeholder="Disabled" />
+                <Textarea readOnly defaultValue="Read-only content" />
+                <Textarea characterLimit={50} showCharacterCount placeholder="Limit 50" />
+                {/* ...clear button example */}
             </section>
 
             <section>
-                <h3 className="mb-2 font-medium">Underline Tabs, Small Size, Purple Theme</h3>
-                <Tabs
-                    tabs={exampleTabs}
-                    activeTabId={activeId}
-                    onTabChange={setActiveId}
-                    shape="underline"
-                    size="sm"
-                    theme="purple"
-                    scrollable
-                    draggable
-                />
+                <h2>Content Features</h2>
+                <Textarea placeholder="Supports @mentions and #tags" />
+                <Textarea markdown placeholder="Write *markdown* here" />
+                <Textarea syntaxHighlight placeholder="Paste your code…" />
+                <Textarea placeholderHint="You can paste from templates" />
+                {/* ...suggestion example, autosave example */}
             </section>
 
-            {/* You can add more demos here for all requested variants */}
+            <section>
+                <h2>Advanced UX & Theming</h2>
+                <Textarea wordCount readingTime autosaveKey="blog-draft" />
+                <Textarea rtl placeholder="RTL example" />
+                {/* ...custom scrollbar example, focus glow, etc. */}
+            </section>
         </div>
     );
 }
