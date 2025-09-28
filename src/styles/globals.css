@@ -277,3 +277,135 @@ body {
 button{
     box-shadow: none !important;
 }
+
+
+
+
+
+
+
+
+
+/* text */
+:root[data-theme] {
+    /* Common base for all themes */
+    --text-xs: 0.75rem;
+    /* 12px */
+    --text-sm: 0.875rem;
+    /* 14px */
+    --text-md: 1rem;
+    /* 16px */
+    --text-lg: 1.125rem;
+    /* 18px */
+    --text-xl: 1.25rem;
+    /* 20px */
+    --text-2xl: 1.5rem;
+    /* 24px */
+
+    /* Responsive sizes per tag */
+    span {
+        font-size: var(--text-md);
+    }
+
+    span.spanlg {
+        font-size: var(--text-lg);
+    }
+
+    span.spanmd {
+        font-size: var(--text-md);
+    }
+
+    span.spansm {
+        font-size: var(--text-sm);
+    }
+
+    span.spanxl {
+        font-size: var(--text-xl);
+    }
+
+    /* Headings */
+    h1 {
+        font-size: var(--text-2xl);
+        font-weight: bold;
+    }
+
+    h2 {
+        font-size: var(--text-xl);
+        font-weight: bold;
+    }
+
+    h3 {
+        font-size: var(--text-lg);
+        font-weight: bold;
+    }
+
+    h4 {
+        font-size: var(--text-md);
+        font-weight: bold;
+    }
+
+    h5 {
+        font-size: var(--text-sm);
+        font-weight: bold;
+    }
+
+    h6 {
+        font-size: var(--text-xs);
+        font-weight: bold;
+    }
+
+    /* Paragraph */
+    p {
+        font-size: var(--text-md);
+        margin-bottom: 1em;
+    }
+
+    /* Bold, Italic, Underline (optional, add as base if needed) */
+    strong,
+    b {
+        font-weight: bold;
+    }
+
+    em,
+    i {
+        font-style: italic;
+    }
+
+    u {
+        text-decoration: underline;
+    }
+}
+
+/* If you want specific responsive overrides, add media queries here */
+@media (min-width: 640px) {
+    :root {
+        --text-xs: 0.8125rem;
+        --text-sm: 0.9375rem;
+        --text-md: 1.125rem;
+        --text-lg: 1.25rem;
+        --text-xl: 1.5rem;
+        --text-2xl: 1.75rem;
+    }
+}
+
+@media (min-width: 768px) {
+    :root {
+        --text-xs: 0.875rem;
+        --text-sm: 1rem;
+        --text-md: 1.25rem;
+        --text-lg: 1.5rem;
+        --text-xl: 1.75rem;
+        --text-2xl: 2rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    :root {
+        --text-xs: 1rem;
+        --text-sm: 1.125rem;
+        --text-md: 1.5rem;
+        --text-lg: 1.75rem;
+        --text-xl: 2rem;
+        --text-2xl: 2.25rem;
+    }
+}
