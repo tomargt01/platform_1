@@ -2,13 +2,12 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { AccordionItemProps } from './Accordion.types';
-import { getThemeStyles, getSizeStyles, getVariantStyles } from './Accordion.styles';
+import { getSizeStyles, getVariantStyles } from './Accordion.styles';
 import AccordionIcon from './AccordionIcon';
 
 const AccordionItem: React.FC<AccordionItemProps> = ({
     title,
     children,
-    theme = 'light',
     size = 'md',
     variant = 'default',
     disabled = false,
@@ -28,18 +27,15 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
     const [contentHeight, setContentHeight] = useState<number>(0);
 
     const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
-    const themeStyles = getThemeStyles(theme);
     const sizeStyles = getSizeStyles(size);
-    const variantStyles = getVariantStyles(variant, theme);
+    const variantStyles = getVariantStyles(variant);
 
-    // Calculate content height for smooth animation
     useEffect(() => {
         if (contentRef.current) {
             setContentHeight(isExpanded ? contentRef.current.scrollHeight : 0);
         }
     }, [isExpanded, children]);
 
-    // Recalculate height when content changes
     useEffect(() => {
         if (isExpanded && contentRef.current) {
             setContentHeight(contentRef.current.scrollHeight);
@@ -48,13 +44,10 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
 
     const handleToggle = () => {
         if (disabled) return;
-
         const newExpanded = !isExpanded;
-
         if (controlledExpanded === undefined) {
             setInternalExpanded(newExpanded);
         }
-
         onToggle?.(newExpanded);
     };
 
@@ -66,26 +59,28 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
         fontSize: sizeStyles.fontSize,
         fontWeight: '500',
         cursor: disabled ? 'not-allowed' : 'pointer',
-        backgroundColor: isExpanded ? themeStyles.active : themeStyles.background,
-        color: disabled ? `${themeStyles.text}80` : themeStyles.text,
+        backgroundColor: isExpanded ? 'var(--accent)' : 'var(--background)',
+        color: isExpanded ? 'var(--background)' : disabled ? 'var(--text)80' : 'var(--text)',  // <-- active text
         borderRadius: variant === 'separated' || variant === 'flush' ? '0' : sizeStyles.borderRadius,
         transition: `all ${animationDuration}ms ease-in-out`,
         userSelect: 'none',
         opacity: disabled ? 0.6 : 1,
+        border: variantStyles.border,
+        marginBottom: variantStyles.marginBottom,
     };
 
     const contentStyle: React.CSSProperties = {
         height: `${contentHeight}px`,
         overflow: 'hidden',
         transition: `height ${animationDuration}ms ease-in-out`,
-        backgroundColor: themeStyles.background,
+        backgroundColor: 'var(--background)',
     };
 
     const innerContentStyle: React.CSSProperties = {
         padding: sizeStyles.contentPadding,
         fontSize: sizeStyles.fontSize,
         lineHeight: '1.5',
-        color: themeStyles.text,
+        color: 'var(--text)',
     };
 
     const containerStyle: React.CSSProperties = {
@@ -94,10 +89,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
     };
 
     return (
-        <div
-            className={`accordion-item ${className}`}
-            style={containerStyle}
-        >
+        <div className={`accordion-item ${className}`} style={containerStyle}>
             {/* Header */}
             <div
                 className={`accordion-header ${headerClassName}`}
@@ -116,24 +108,23 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             >
                 <div className="flex items-center">
                     {icon && (
-                        <span className="accordion-title-icon mr-2" style={{ color: themeStyles.primary }}>
+                        <span className="accordion-title-icon mr-2">
                             {icon}
                         </span>
                     )}
                     <span className="accordion-title">{title}</span>
                 </div>
-
                 {showIcon && (
                     <AccordionIcon
                         isExpanded={isExpanded}
-                        theme={theme}
                         size={size}
                         customIcon={customIcon}
                         animationDuration={animationDuration}
+                        // Pass color to icon: if expanded, var(--background); else var(--text)
+                        color={isExpanded ? 'var(--background)' : 'var(--text)'}
                     />
                 )}
             </div>
-
             {/* Content */}
             <div className="accordion-content" style={contentStyle}>
                 <div

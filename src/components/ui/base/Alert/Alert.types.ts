@@ -1,46 +1,38 @@
-import type { ReactNode } from "react";
-import type { LucideIcon } from "lucide-react";
-import type { Intent } from "../Button/Button.types";
-import type { HTMLMotionProps } from "framer-motion";
+import type { ReactNode } from 'react';
 
-// List of HTML props that conflict with Framer Motion's props
-type ConflictingProps =
-    | "onDrag"
-    | "onDragEnd"
-    | "onDragEnter"
-    | "onDragExit"
-    | "onDragLeave"
-    | "onDragOver"
-    | "onDragStart"
-    | "onDrop"
-    | "onAnimationStart"
-    | "onAnimationEnd"
-    | "onAnimationIteration";
+// Intent types for alerts
+export type AlertIntent = 'info' | 'success' | 'warning' | 'error' | 'critical';
 
-export type AlertVariant = "error" | "warning" | "info" | "critical";
-export type Theme = "light" | "dark" | "purple" | "pink" | "green" | "blue";
-
+// Alert action button props
 export interface AlertAction {
     label: string;
     onClick: () => void;
-    intent?: Intent;
+    intent?: 'primary' | 'secondary' | 'destructive';
     disabled?: boolean;
     loading?: boolean;
 }
 
-export interface AlertProps
-    extends Omit<HTMLMotionProps<"div">, "title" | ConflictingProps> {
-    variant?: AlertVariant;
-    theme?: Theme;
+// Main Alert props (no theme!)
+export interface AlertProps {
+    // Intent (required, sets color and icon)
+    intent: AlertIntent;
+    // Content
     title?: string | ReactNode;
     description?: string | ReactNode;
+    // Interactions
     dismissible?: boolean;
     onDismiss?: () => void;
     actions?: AlertAction[];
-    customIcon?: LucideIcon;
+    // Customization
+    customIcon?: React.ReactNode;
     showTimestamp?: boolean;
     details?: string | ReactNode;
-    timer?: number; // Timer duration in seconds
-    onTimerComplete?: () => void; // Callback when timer completes
-    undoAction?: () => void; // Callback for undo action
+    // Auto-dismiss
+    timer?: number; // seconds
+    onTimerComplete?: () => void;
+    // Undo action
+    undoAction?: () => void;
+    // Layout & class
+    className?: string;
 }
+

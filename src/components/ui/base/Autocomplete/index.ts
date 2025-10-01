@@ -2,8 +2,7 @@ export { default as Autocomplete } from './Autocomplete';
 export type {
     AutocompleteProps,
     AutocompleteOption,
-    Theme,
     AutocompleteSize,
     FilterType,
-    CustomColors
+    AutocompleteIntent
 } from './Autocomplete.types';

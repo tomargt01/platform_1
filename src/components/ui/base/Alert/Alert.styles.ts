@@ -1,30 +1,23 @@
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from 'class-variance-authority';
 
+// No theme variants, just intent using CSS vars
 export const alertVariants = cva(
-    "p-5 rounded-lg border-2 border-[var(--border)] shadow-lg transition-all duration-200",
+    // Base styles (all global vars)
+    `p-[var(--pad12px)] rounded-[var(--radius-md)] 
+   border-[var(--1pxSolidBorder)] shadow-[var(--shadow-sm)]
+   transition-all duration-[var(--transition-medium)]`,
     {
         variants: {
-            variant: {
-                error: "bg-red-50 text-red-900 border-red-500",
-                warning: "bg-yellow-50 text-yellow-900 border-yellow-500",
-                info: "bg-blue-50 text-blue-900 border-blue-500",
-                critical:
-                    "bg-red-100 text-red-900 border-red-700 ring-2 ring-red-500/30",
-            },
-            theme: {
-                light: "",
-                dark: "",
-                purple: "",
-                pink: "",
-                green: "",
-                blue: "",
+            intent: {
+                info: "bg-[var(--alert-bg-info)] text-[var(--text)] border-[var(--text)]",
+                success: "bg-[var(--alert-bg-success)] text-[var(--text)] border-[var(--text)]",
+                warning: "bg-[var(--alert-bg-warning)] text-[var(--text)] border-[var(--text)]",
+                error: "bg-[var(--alert-bg-error)] text-[var(--text)] border-[var(--text)]",
+                critical: "bg-[var(--alert-bg-critical)] text-[var(--text)] border-[var(--text)] ring-2 ring-[var(--red-500)]",
             },
         },
         defaultVariants: {
-            variant: "info",
-            theme: "light",
-        },
+            intent: 'info'
+        }
     }
 );
-
-export type AlertVariants = VariantProps<typeof alertVariants>;

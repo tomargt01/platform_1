@@ -2,6 +2,404 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/* =======================
+   GLOBAL CSS VARIABLES
+   For SaaS / ERP Project
+========================== */
+:root {
+
+    /* Font Sizes */
+    --font-xxs: clamp(10px, 0.6vw, 12px);   /* tiny helper */
+    --font-xs: clamp(12px, 0.7vw, 13px);    /* captions, labels */
+    --font-sm: clamp(13px, 0.8vw, 14px);    /* small text */
+    --font-md: clamp(14px, 0.9vw, 16px);    /* body text */
+    --font-lg: clamp(16px, 1vw, 18px);      /* slightly larger body */
+    --font-xl: clamp(18px, 1.2vw, 20px);    /* sub-headings */
+    --font-xxl: clamp(20px, 1.6vw, 24px);   /* section titles */
+
+    /* Custom Large Sizes */
+    --font-24: clamp(20px, 2vw, 24px);
+    --font-30: clamp(24px, 2.6vw, 30px);
+    --font-40: clamp(28px, 4vw, 40px);
+    --font-52: clamp(32px, 5vw, 52px);
+
+    /* Headings */
+    --font-h1: clamp(22px, 2.4vw, 28px);    /* page title */
+    --font-h2: clamp(18px, 2vw, 24px);      /* section heading */
+    --font-h3: clamp(16px, 1.6vw, 20px);    /* sub-heading */
+    --font-h4: clamp(15px, 1.2vw, 18px);    /* smaller heading */
+    --font-h5: clamp(14px, 1vw, 16px);      /* compact heading */
+    --font-h6: clamp(13px, 0.9vw, 15px);    /* smallest heading */
+
+    /* Line Heights */
+    --line-height-xs: 1.2;
+    --line-height-sm: 1.3;
+    --line-height-md: 1.4;
+    --line-height-lg: 1.5;
+    --line-height-xl: 1.6;
+
+    /* Letter Spacing */
+    --letter-spacing-xs: 0.02em;
+    --letter-spacing-sm: 0.01em;
+    --letter-spacing-md: normal;
+    --letter-spacing-lg: -0.01em;
+    --letter-spacing-xl: -0.02em;
+
+    /* Font Weights */
+    --fw-light: 300;
+    --fw-normal: 400;
+    --fw-medium: 500;
+    --fw-semi-bold: 600;
+    --fw-bold: 700;
+    --fw-extra-bold: 800;
+    --fw-black: 900;
+
+     /* BREAKPOINTS & CONTAINERS */
+
+    --bp-xs: 320px;
+    --bp-sm: 576px;
+    --bp-md: 768px;
+    --bp-lg: 1024px;
+    --bp-xl: 1280px;
+
+    --container-max-sm: 540px;
+    --container-max-md: 720px;
+    --container-max-lg: 960px;
+    --container-max-xl: 1140px;
+
+    /* SPACING SCALE (responsive) */
+    /* base spacing uses rem; html font-size is fluid via clamp() earlier */
+
+    --space-0: 0rem;
+    --space-1: 0.25rem;     /* 4px */
+    --space-2: 0.5rem;      /* 8px */
+    --space-3: 0.75rem;     /* 12px */
+    --space-4: 1rem;        /* 16px */
+    --space-5: 1.5rem;      /* 24px */
+    --space-6: 2rem;        /* 32px */
+    --space-7: 2.5rem;      /* 40px */
+    --space-8: 3rem;        /* 48px */
+
+    /* responsive gap multiplier for very small / big screens (if needed) */
+    --space-scale-sm: clamp(0.75rem, 0.6vw, 1rem);
+    --space-scale-lg: clamp(1rem, 1.4vw, 1.25rem);
+
+     /* BORDER RADIUS */
+    --radius-xs: 4px;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-pill: 9999px;
+
+    /* Border */
+    --border-width-1: 1px;
+    --border-style: solid;
+    --border-color: #ccc;
+
+    /* Border radius */
+    --radius-xs: 4px;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+
+    --pad8px: 8px;
+    --pad12px: 12px;
+    --pad16px: 16px;
+    --pad20px: 20px;
+
+
+     /* SHADOWS / ELEVATION */
+    /* subtle shadow, card, modal */
+    --shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.04);
+    --shadow-sm: 0 2px 6px rgba(16, 24, 40, 0.06);
+    --shadow-md: 0 6px 18px rgba(16, 24, 40, 0.08);
+    --shadow-lg: 0 10px 40px rgba(16, 24, 40, 0.12);
+    --shadow-focus: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    /* focus ring */
+
+     /* BORDERS */
+    --border-1: 1px solid rgba(15, 23, 42, 0.06);
+    --border-2: 2px solid rgba(15, 23, 42, 0.04);
+
+     /* Z-INDEX LAYERS */
+    --z-base: 0;
+    --z-dropdown: 1000;
+    --z-sticky: 1100;
+    --z-modal: 1200;
+    --z-popover: 1300;
+    --z-tooltip: 1400;
+    
+    /* SIZES (icon, control, avatar) */
+    --control-height-sm: 2rem;      /* 32px */
+    --control-height-md: 2.5rem;    /* 40px */
+    --control-height-lg: 3rem;      /* 48px */
+
+    --icon-xs: 0.75rem;     /* 12px */
+    --icon-sm: 1rem;        /* 16px */
+    --icon-md: 1.25rem;     /* 20px */
+    --icon-lg: 1.5rem;      /* 24px */
+    --icon-xl: 2rem;        /* 32px */
+
+    --avatar-sm: 1.5rem;        /* 24px */
+    --avatar-md: 2.5rem;        /* 40px */
+    --avatar-lg: 3.5rem;        /* 56px */
+
+     /* TABLE / GRID */
+    --table-row-height: 3rem;                   /* 48px */
+    --table-row-height-compact: 2.25rem;        /* 36px */
+    --table-cell-padding: var(--space-3);
+
+     /* TRANSITIONS */
+    --ease-fast: cubic-bezier(.4, 0, .2, 1);
+    --ease-medium: cubic-bezier(.2, .8, .2, 1);
+    --dur-fast: 120ms;
+    --dur-medium: 240ms;
+    --dur-slow: 400ms;
+
+     /* OPACITY & STATES */
+    --opacity-disabled: 0.5;
+    --overlay-bg: rgba(0, 0, 0, 0.45);
+
+     /* FOCUS / ACCESSIBILITY */
+    --focus-outline: 3px solid rgba(59, 130, 246, 0.18);
+
+     /* EXTRAS: border radius for inputs/cards */
+    --card-padding: var(--space-4);
+    --card-radius: var(--radius-md);
+    --form-control-radius: var(--radius-sm);
+
+    /* Z-index */
+    --z-dropdown: 1000;
+    --z-modal: 1050;
+    --z-tooltip: 1100;
+    --z-sticky: 1150;
+
+
+    /* Buttons & Inputs */
+    --btn-height-sm: 32px;
+    --btn-height-md: 40px;
+    --btn-padding-sm: 8px 12px;
+    --btn-padding-md: 12px 16px;
+    --input-height-sm: 32px;
+    --input-height-md: 40px;
+    --input-padding-sm: 8px 12px;
+    --input-padding-md: 12px 16px;
+
+
+    /* Icons */
+    --icon-xs: 12px;
+    --icon-sm: 16px;
+    --icon-md: 20px;
+    --icon-lg: 24px;
+
+
+    /* Transitions / Animations */
+    --transition-fast: 150ms;
+    --transition-medium: 300ms;
+    --transition-slow: 500ms;
+
+
+    /* Others */
+    --border-width: 1px;
+    --border-style: solid;
+    --overlay-opacity: 0.5;
+    --modal-padding: 24px;
+    --card-padding: 16px;
+    --tooltip-padding: 8px;
+
+
+    /* Base theme colors */
+    --background: #ffffff;
+    --text: #1f2937;
+    --primary: #3b82f6;
+    --secondary: #e5e7eb;
+    --accent: #2563eb;
+    --lightBg: #ffffff;
+
+    /* *************************************************
+    /* CSS THAT VARIABLES NEED TO BE CHANGED 
+    ************************************************* */
+
+    /* * Border Color Variables (often used for separators, dividers, subtle lines) */ 
+    --border-light: rgba(0, 0, 0, 0.1);
+    --border-medium: rgba(0, 0, 0, 0.2);
+    --border-dark: rgba(0, 0, 0, 0.3);
+
+    /* Border Radius Variables */
+    --radius-xs: 4px;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-pill: 9999px;
+
+    /* Padding Variables (add more as needed) */
+    --pad8px: 8px;
+    --pad12px: 12px;
+    --pad16px: 16px;
+    --pad20px: 20px;
+
+    /* Margin Variables */
+    --margin4px: 4px;
+    --margin8px: 8px;
+    --margin16px: 16px;
+
+    /* Additional Intent-Based Colors (e.g., red, green, yellow, blue for alerts) */
+    --intent-danger: var(--error);
+    --intent-warning: var(--warning);
+    --intent-success: var(--success);
+    --intent-info: var(--info);
+
+    /* Transition Vars (for consistent easing and timing) */
+    --transition-fast: 150ms;
+    --transition-medium: 300ms;
+    --transition-slow: 500ms;
+
+    --alert-bg-info: #e0e7ff;          /* Info: light blue */
+    --alert-bg-success: #ecfdf5;       /* Success: light green */
+    --alert-bg-warning: #fef3c7;       /* Warning: light yellow */
+    --alert-bg-error: #fee2e2;         /* Error: light red */
+    --alert-bg-critical: #fecaca;
+
+    /* ////////////////////////////////////////////////////////// */
+    /* New variables for spacing/border */
+    --pad4px: 4px;
+    --pad8px: 8px;
+    --pad12px: 12px;
+    --pad16px: 16px;
+    --margin4px: 4px;
+    --margin8px: 8px;
+
+    /* Border style variables */
+    --OneSolidBorder: 1px solid;
+    --OneDottedBorder: 1px dotted;
+    --borderColor: var(--border);
+    /* You already have --border for border color */
+
+    /* Border radius variables */
+    --radius4px: 4px;
+    --radius6px: 6px;
+    --radius8px: 8px;
+
+    --placeholder: #6b7280;
+    --hover-bg: rgba(0, 0, 0, 0.05);
+    --selected-bg: #2563eb;
+    --dropdown-bg: #ffffff;
+    --dropdown-border: #e5e7eb;
+    --no-result-text: #6b7280;
+    --error: #ef4444;
+    
+}
+
+
+/* Dark theme override */
+:root[data-theme='dark'] {
+    --background: #1f2937;
+    --text: #f9fafb;
+    --primary: #354358;
+    --secondary: #4b5563;
+    --accent: #3b82f6;
+    --border: #374151;
+    --hover: #374151;
+    --active: #4b5563;
+    --lightBg: #1f2937;
+}
+
+
+/* Purple theme */
+:root[data-theme='purple'] {
+    --background: #f5f3ff;
+    --text: #4c1d95;
+    --primary: #8b5cf6;
+    --secondary: #ede9fe;
+    --accent: #7c3aed;
+    --lightBg: #ffffff;
+}
+
+
+/* Pink theme */
+:root[data-theme='pink'] {
+    --background: #fdf2f8;
+    --text: #831843;
+    --primary: #ec4899;
+    --secondary: #fce7f3;
+    --accent: #db2777;
+    --lightBg: #ffffff;
+}
+
+
+/* Green theme */
+:root[data-theme='green'] {
+    --background: #ecfdf5;
+    --text: #064e3b;
+    --primary: #10b981;
+    --secondary: #d1fae5;
+    --accent: #059669;
+    --lightBg: #ffffff;
+}
+
+
+/* Blue theme */
+:root[data-theme='blue'] {
+    --background: #eff6ff;
+    --text: #1e40af;
+    --primary: #3b82f6;
+    --secondary: #dbeafe;
+    --accent: #2563eb;
+    --lightBg: #ffffff;
+}
+
+
+/* Smooth transition for color and background changes */
+* {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 :root[data-theme='light'] {
     --background: #ffffff;
     --text: #1f2937;
@@ -84,6 +482,37 @@ body {
     background-color: var(--background);
     color: var(--text);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

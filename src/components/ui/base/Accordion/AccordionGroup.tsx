@@ -6,7 +6,6 @@ import AccordionItem from './AccordionItem';
 
 const AccordionGroup: React.FC<AccordionGroupProps> = ({
     items,
-    theme = 'light',
     size = 'md',
     variant = 'default',
     allowMultiple = false,
@@ -56,16 +55,15 @@ const AccordionGroup: React.FC<AccordionGroupProps> = ({
 
     return (
         <div className={`accordion-group ${className}`}>
-            {items.map((item) => (
+            {items.map(item => (
                 <AccordionItem
                     key={item.id}
                     title={item.title}
-                    theme={theme}
                     size={size}
                     variant={variant}
                     disabled={item.disabled}
                     expanded={expandedItems.has(item.id)}
-                    onToggle={(expanded) => handleItemToggle(item.id, expanded)}
+                    onToggle={expanded => handleItemToggle(item.id, expanded)}
                     animationDuration={animationDuration}
                 >
                     {item.content}
