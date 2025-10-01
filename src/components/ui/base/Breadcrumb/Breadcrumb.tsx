@@ -22,11 +22,8 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
         return [firstItem, { label: '...', disabled: true }, ...lastItems];
     }, [items, maxItems]);
 
-    const handleItemClick = (
-        item: BreadcrumbItem,
-        index: number,
-        event: React.MouseEvent
-    ) => {
+    // Handle click logic: Only prevent default if there’s a custom onClick
+    const handleItemClick = (item: BreadcrumbItem, index: number, event: React.MouseEvent) => {
         if (item.disabled) {
             event.preventDefault();
             return;
@@ -34,9 +31,6 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
         if (item.onClick) {
             event.preventDefault();
             item.onClick();
-        }
-        if (onItemClick) {
-            onItemClick(item, index);
         }
     };
 
@@ -89,7 +83,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
             return (
                 <Link
                     href={item.href}
-                    onClick={(e) => handleItemClick(item, index, e)}
+                    onClick={item.onClick ? (e) => handleItemClick(item, index, e) : undefined}
                     style={itemStyle}
                     aria-current={isActive ? 'page' : undefined}
                     key={`breadcrumb-link-${index}`}
