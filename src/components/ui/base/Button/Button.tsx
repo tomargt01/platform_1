@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { ArrowRight, Loader2 } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { Loader2 } from "lucide-react";
 import { buttonVariants } from "./Button.styles";
 import type { ButtonProps } from "./Button.types";
 import { cn } from "#/lib/utils/cn";
@@ -12,7 +11,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             className,
             size,
             intent,
-            theme,
+            variant,
             children,
             leftIcon: LeftIcon,
             rightIcon: RightIcon,
@@ -23,7 +22,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         },
         ref
     ) => {
-        const { t } = useTranslation();
         const [internalLoading, setInternalLoading] = useState(false);
         const isLoading = loading || internalLoading;
 
@@ -43,27 +41,27 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 ref={ref}
                 data-testid="button"
                 data-intent={intent}
-                data-theme={theme}
                 data-size={size}
+                data-variant={variant}
                 disabled={disabled || isLoading}
                 aria-disabled={disabled || isLoading}
                 aria-busy={isLoading}
                 onClick={handleClick}
                 className={cn(
-                    buttonVariants({ intent, size, theme }),
+                    buttonVariants({ intent, size, variant }),
                     isLoading && "cursor-wait",
                     className
                 )}
                 {...props}
             >
-                {LeftIcon && !isLoading && (
+                {LeftIcon && !isLoading && variant !== "iconOnly" && (
                     <LeftIcon className="w-4 h-4 mr-2 rtl:ml-2 rtl:mr-0" />
                 )}
                 {isLoading && (
                     <Loader2 className="w-4 h-4 animate-spin mr-2 rtl:ml-2 rtl:mr-0" />
                 )}
                 {children}
-                {RightIcon && !isLoading && (
+                {RightIcon && !isLoading && variant !== "iconOnly" && (
                     <RightIcon className="w-4 h-4 ml-2 rtl:mr-2 rtl:ml-0" />
                 )}
             </button>

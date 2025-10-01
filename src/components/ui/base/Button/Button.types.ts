@@ -1,17 +1,16 @@
-// src/components/ui/Button/Button.types.ts
-import type { LucideIcon } from "lucide-react";
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import type { ReactNode, ComponentPropsWithoutRef, ElementType } from "react";
+import type { ButtonVariants } from "./Button.styles";
 
-export type Theme = "light" | "dark" | "purple" | "pink" | "green" | "blue";
 export type Size = "xs" | "sm" | "md" | "lg";
-export type Intent = "primary" | "secondary" | "ghost" | "destructive";
+export type Intent = "primary" | "secondary" | "ghost" | "destructive" | "outline";
+export type Variant = "default" | "pill" | "square" | "raised" | "expandable" | "iconOnly" | "fullWidth";
 
 export interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
     size?: Size;
     intent?: Intent;
-    theme?: Theme;
-    leftIcon?: LucideIcon;
-    rightIcon?: LucideIcon;
+    variant?: Variant;
+    leftIcon?: ElementType;
+    rightIcon?: ElementType;
     loading?: boolean;
     disabled?: boolean;
     children: ReactNode;
