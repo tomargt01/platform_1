@@ -2,12 +2,11 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react';
 import { TestimonialCarouselProps } from './Carousel.types';
-import { getThemeColors, getSizeClasses } from './Carousel.styles';
 import { useCarousel } from './hooks/useCarousel';
+import { cn } from '#/lib/utils/cn';
 
 const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
     testimonials,
-    theme = 'light',
     size = 'md',
     controls = {},
     showAvatar = true,
@@ -22,24 +21,21 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
         loop = true,
     } = controls;
 
-    const { currentIndex, nextSlide, prevSlide, goToSlide } = useCarousel({
+    const { currentIndex, nextSlide, prevSlide, goToSlide, isAnimating } = useCarousel({
         itemsLength: testimonials.length,
         autoPlay,
         autoPlayInterval,
         loop,
     });
 
-    const themeColors = getThemeColors(theme);
-    const sizeClasses = getSizeClasses(size);
-
     if (!testimonials.length) return null;
 
+    // Rating stars (uses Tailwind colors directly—replace if you use CSS vars for stars)
     const renderStars = (rating: number) => {
         return Array.from({ length: 5 }, (_, i) => (
             <Star
                 key={i}
-                className={`w-4 h-4 ${i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                    }`}
+                className={`w-4 h-4 ${i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
             />
         ));
     };
@@ -47,16 +43,26 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
     const currentTestimonial = testimonials[currentIndex];
 
     return (
-        <div className={`relative ${sizeClasses.container} mx-auto ${className}`}>
-            <div className={`${themeColors.card} rounded-lg ${themeColors.shadow} ${sizeClasses.padding} text-center relative overflow-hidden`}>
+        <div className={cn('relative', className)}>
+            <div
+                className="rounded-lg overflow-hidden text-center relative"
+                style={{
+                    backgroundColor: 'var(--lightBg)',
+                    border: 'var(--1pxSolidBorder) var(--borderColor)',
+                    boxShadow: 'var(--shadow-md)',
+                    padding: 'var(--pad12px)',
+                    borderRadius: 'var(--radius6px)',
+                    maxWidth: `var(--maxWidth-${size})`,
+                }}
+            >
                 {/* Quote Icon */}
-                <div className={`flex justify-center mb-4`}>
-                    <Quote className={`w-8 h-8 ${themeColors.accent} opacity-50`} />
+                <div className="flex justify-center mb-4">
+                    <Quote className="w-8 h-8 text-[var(--accent)] opacity-50" />
                 </div>
 
                 {/* Testimonial Content */}
                 <div className="min-h-[200px] flex flex-col justify-center">
-                    <blockquote className={`${sizeClasses.text} ${themeColors.text} mb-6 leading-relaxed max-w-3xl mx-auto`}>
+                    <blockquote className="mb-6 leading-relaxed max-w-3xl mx-auto text-[var(--text)] text-base">
                         "{currentTestimonial.content}"
                     </blockquote>
 
@@ -68,7 +74,7 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                     )}
 
                     {/* Author Info */}
-                    <div className="flex items-center justify-center space-x-4">
+                    <div className="flex items-center justify-center gap-4">
                         {showAvatar && currentTestimonial.avatar && (
                             <img
                                 src={currentTestimonial.avatar}
@@ -78,11 +84,11 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                         )}
 
                         <div className="text-left">
-                            <div className={`font-semibold ${themeColors.text} ${sizeClasses.text}`}>
+                            <div className="font-semibold text-[var(--text)] text-base">
                                 {currentTestimonial.author}
                             </div>
                             {currentTestimonial.role && (
-                                <div className={`text-sm ${themeColors.accent} opacity-80`}>
+                                <div className="text-sm text-[var(--accent)] opacity-80">
                                     {currentTestimonial.role}
                                     {currentTestimonial.company && ` at ${currentTestimonial.company}`}
                                 </div>
@@ -96,15 +102,19 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                     <>
                         <button
                             onClick={prevSlide}
-                            className={`absolute left-4 top-1/2 -translate-y-1/2 rounded-full ${themeColors.arrow} ${sizeClasses.arrow} flex items-center justify-center shadow-lg z-10 transition-all`}
+                            disabled={isAnimating}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-[var(--background)] border-[var(--borderColor)] text-[var(--text)] shadow-md hover:bg-[var(--text)] transition-colors flex items-center justify-center w-8 h-8 md:w-10 md:h-10"
+                            aria-label="Previous Slide"
                         >
-                            <ChevronLeft className="w-1/2 h-1/2" />
+                            <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
                         </button>
                         <button
                             onClick={nextSlide}
-                            className={`absolute right-4 top-1/2 -translate-y-1/2 rounded-full ${themeColors.arrow} ${sizeClasses.arrow} flex items-center justify-center shadow-lg z-10 transition-all`}
+                            disabled={isAnimating}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-[var(--background)] border-[var(--borderColor)] text-[var(--text)] shadow-md hover:bg-[var(--text)] transition-colors flex items-center justify-center w-8 h-8 md:w-10 md:h-10"
+                            aria-label="Next Slide"
                         >
-                            <ChevronRight className="w-1/2 h-1/2" />
+                            <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
                         </button>
                     </>
                 )}
@@ -112,13 +122,18 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
 
             {/* Dots Indicator */}
             {showDots && testimonials.length > 1 && (
-                <div className="flex justify-center space-x-2 mt-6">
-                    {testimonials.map((_, index) => (
+                <div className="flex justify-center gap-2 mt-6">
+                    {testimonials.map((_, idx) => (
                         <button
-                            key={index}
-                            onClick={() => goToSlide(index)}
-                            className={`rounded-full ${sizeClasses.dot} transition-colors ${index === currentIndex ? themeColors.activeDot : themeColors.dot
-                                }`}
+                            key={idx}
+                            onClick={() => goToSlide(idx)}
+                            className={cn(
+                                'rounded-full transition-colors w-3 h-3',
+                                idx === currentIndex
+                                    ? 'bg-[var(--text)]'
+                                    : 'bg-[var(--secondary)]'
+                            )}
+                            aria-label={`Go to slide ${idx + 1}`}
                         />
                     ))}
                 </div>

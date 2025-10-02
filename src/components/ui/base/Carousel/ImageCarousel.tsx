@@ -2,12 +2,11 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ImageCarouselProps, IndicatorType } from './Carousel.types';
-import { getThemeColors, getSizeClasses } from './Carousel.styles';
 import { useCarousel } from './hooks/useCarousel';
+import { cn } from '#/lib/utils/cn';
 
 const ImageCarousel: React.FC<ImageCarouselProps> = ({
     images,
-    theme = 'light',
     size = 'md',
     controls = {},
     aspectRatio = '16/9',
@@ -33,9 +32,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         loop,
         infiniteLoop,
     });
-
-    const themeColors = getThemeColors(theme);
-    const sizeClasses = getSizeClasses(size);
 
     if (!images.length) return null;
 
@@ -70,14 +66,20 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     };
 
     return (
-        <div className={`relative ${sizeClasses.container} mx-auto ${className}`}>
-            {/* Main Image */}
-            <div className={`relative overflow-hidden rounded-lg ${themeColors.background}`}>
+        <div
+            className={cn(
+                `relative mx-auto rounded-lg overflow-hidden bg-[var(--lightBg)] border-[var(--borderColor)] shadow-lg p-[var(--pad12px)]`,
+                className,
+                `max-w-[var(--maxWidth-${size})]`
+            )}
+        >
+            {/* Images Container */}
+            <div className="relative w-full overflow-hidden">
                 <div
                     className="flex transition-transform duration-300 ease-in-out"
                     style={{ transform: `translateX(-${currentIndex * 100}%)` }}
                 >
-                    {images.map((image, index) => (
+                    {images.map((image, index: number) => (
                         <div
                             key={image.id}
                             className="w-full flex-shrink-0 relative"
@@ -90,33 +92,31 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                                 loading={index === 0 ? 'eager' : 'lazy'}
                             />
 
-                            {/* Text Overlay */}
+                            {/* Overlay (Text, Caption) */}
                             {showTextOverlay && (image.title || image.caption || image.description) && (
-                                <div className={`${getOverlayClasses()} ${themeColors.overlay || 'bg-black bg-opacity-50'} text-white p-4`}>
+                                <div
+                                    className={`${getOverlayClasses()} bg-[var(--overlay)] text-[var(--text)] p-[var(--pad16px)]`}
+                                >
                                     <div className={`${overlayType === 'center' ? 'text-center' : ''}`}>
                                         {image.title && (
-                                            <h3 className={`${sizeClasses.title} font-bold mb-2`}>
-                                                {image.title}
-                                            </h3>
+                                            <h3 className="font-bold mb-2 text-xl">{image.title}</h3>
                                         )}
                                         {image.description && (
-                                            <p className={`${sizeClasses.text} mb-2`}>
-                                                {image.description}
-                                            </p>
+                                            <p className="mb-2">{image.description}</p>
                                         )}
                                         {image.caption && (
-                                            <p className={`${sizeClasses.text} opacity-90`}>
-                                                {image.caption}
-                                            </p>
+                                            <p className="opacity-90">{image.caption}</p>
                                         )}
                                     </div>
                                 </div>
                             )}
 
-                            {/* Regular caption (when overlay is disabled) */}
+                            {/* Regular Caption (when overlay is disabled) */}
                             {!showTextOverlay && image.caption && (
-                                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-4">
-                                    <p className={sizeClasses.text}>{image.caption}</p>
+                                <div
+                                    className="absolute bottom-0 left-0 right-0 bg-[var(--overlay)] text-[var(--text)] p-[var(--pad16px)]"
+                                >
+                                    <p>{image.caption}</p>
                                 </div>
                             )}
                         </div>
@@ -128,46 +128,56 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                     <>
                         <button
                             onClick={prevSlide}
-                            className={`absolute left-2 top-1/2 -translate-y-1/2 rounded-full ${themeColors.arrow} ${sizeClasses.arrow} flex items-center justify-center shadow-lg z-10`}
+                            disabled={currentIndex === 0}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-[var(--background)] border-[var(--borderColor)] text-[var(--text)] shadow-md hover:bg-[var(--text)] transition-colors flex items-center justify-center w-8 h-8 md:w-10 md:h-10 z-10"
+                            aria-label="Previous Slide"
                         >
-                            <ChevronLeft className="w-1/2 h-1/2" />
+                            <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
                         </button>
                         <button
                             onClick={nextSlide}
-                            className={`absolute right-2 top-1/2 -translate-y-1/2 rounded-full ${themeColors.arrow} ${sizeClasses.arrow} flex items-center justify-center shadow-lg z-10`}
+                            disabled={currentIndex === images.length - 1}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-[var(--background)] border-[var(--borderColor)] text-[var(--text)] shadow-md hover:bg-[var(--text)] transition-colors flex items-center justify-center w-8 h-8 md:w-10 md:h-10 z-10"
+                            aria-label="Next Slide"
                         >
-                            <ChevronRight className="w-1/2 h-1/2" />
+                            <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
                         </button>
                     </>
                 )}
             </div>
 
-            {/* Enhanced Indicators */}
+            {/* Dots & Indicators */}
             {showDots && images.length > 1 && (
-                <div className="flex justify-center space-x-2 mt-4">
-                    {images.map((_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => goToSlide(index)}
-                            className={`transition-colors flex items-center justify-center ${indicatorType === 'numeric' || indicatorType === 'roman' || indicatorType === 'alphabetic'
-                                    ? `w-8 h-8 rounded text-sm font-medium ${index === currentIndex
-                                        ? `${themeColors.activeDot} text-white`
-                                        : `${themeColors.dot} ${themeColors.text} hover:${themeColors.activeDot} hover:text-white`
-                                    }`
-                                    : `rounded-full ${sizeClasses.dot} ${index === currentIndex ? themeColors.activeDot : themeColors.dot
-                                    }`
-                                }`}
-                        >
-                            {(indicatorType === 'numeric' || indicatorType === 'roman' || indicatorType === 'alphabetic')
-                                ? getIndicatorContent(index, indicatorType)
-                                : indicatorType === 'squares' || indicatorType === 'diamonds'
-                                    ? <span className={`${index === currentIndex ? themeColors.activeDot.replace('bg-', 'text-') : themeColors.dot.replace('bg-', 'text-')}`}>
-                                        {getIndicatorContent(index, indicatorType)}
-                                    </span>
-                                    : null
+                <div className="flex justify-center gap-2 mt-4">
+                    {images.map((_: typeof images[0], index: number) => {
+                        const isActive = index === currentIndex;
+                        const baseClass = cn(
+                            'flex items-center justify-center transition-colors',
+                            {
+                                'w-8 h-8 rounded-full font-medium': indicatorType === 'numeric' || indicatorType === 'roman' || indicatorType === 'alphabetic',
+                                'rounded-full w-3 h-3': indicatorType === 'dots' || indicatorType === 'squares' || indicatorType === 'diamonds',
                             }
-                        </button>
-                    ))}
+                        );
+                        const variantClass = isActive
+                            ? 'bg-[var(--text)] text-white'
+                            : 'bg-[var(--secondary)] hover:bg-[var(--text)] hover:text-white';
+                        const content = getIndicatorContent(index, indicatorType);
+                        return (
+                            <button
+                                key={index}
+                                onClick={() => goToSlide(index)}
+                                className={`${baseClass} ${variantClass}`}
+                                aria-label={`Go to slide ${index + 1}`}
+                            >
+                                {indicatorType !== 'dots' && (indicatorType !== 'squares' && indicatorType !== 'diamonds')
+                                    ? content
+                                    : indicatorType === 'squares' || indicatorType === 'diamonds'
+                                        ? <span className={`${isActive ? 'text-[var(--secondary)]' : 'text-[var(--dot)]'}`}>{content}</span>
+                                        : null
+                                }
+                            </button>
+                        );
+                    })}
                 </div>
             )}
         </div>

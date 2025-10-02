@@ -1,12 +1,4 @@
-export type Theme = "light" | "dark" | "purple" | "pink" | "green" | "blue";
-export type CarouselSize = "sm" | "md" | "lg";
-
-// New indicator types
-export type IndicatorType = "dots" | "numeric" | "roman" | "alphabetic" | "squares" | "diamonds";
-
-// New layout types
-export type ProductLayoutType = "scrollable" | "grid";
-export type ImageOverlayType = "none" | "bottom" | "center" | "top";
+export type CarouselSize = 'sm' | 'md' | 'lg';
 
 export interface CarouselControls {
     showArrows?: boolean;
@@ -15,8 +7,41 @@ export interface CarouselControls {
     autoPlay?: boolean;
     autoPlayInterval?: number;
     loop?: boolean;
-    infiniteLoop?: boolean; // New: seamless infinite loop
-    indicatorType?: IndicatorType; // New: different indicator styles
+    infiniteLoop?: boolean;
+}
+
+export interface CarouselProps {
+    /** Array of React nodes (slides) */
+    items: React.ReactNode[];
+    /** Size variant, affects maxWidth via CSS var `--maxWidth-${size}` */
+    size?: CarouselSize;
+    /** Controls for arrows, dots, autoplay, etc. */
+    controls?: CarouselControls;
+    /** Custom class applied to the root container */
+    className?: string;
+}
+
+export type IndicatorType =
+    | 'dots'
+    | 'numeric'
+    | 'roman'
+    | 'alphabetic'
+    | 'squares'
+    | 'diamonds';
+
+export type ProductLayoutType = 'scrollable' | 'grid';
+
+export type ImageOverlayType = 'none' | 'bottom' | 'center' | 'top';
+
+export interface CarouselControls {
+    showArrows?: boolean;
+    showDots?: boolean;
+    showThumbnails?: boolean;
+    autoPlay?: boolean;
+    autoPlayInterval?: number;
+    loop?: boolean;
+    infiniteLoop?: boolean;
+    indicatorType?: IndicatorType;
 }
 
 export interface CustomColors {
@@ -27,11 +52,11 @@ export interface CustomColors {
     arrow?: string;
     dot?: string;
     activeDot?: string;
-    overlay?: string; // New: for text overlays
+    overlay?: string;
 }
 
 export interface BaseCarouselProps {
-    theme?: Theme;
+    // theme prop removed – theme is now purely global (CSS variables)
     size?: CarouselSize;
     customColors?: CustomColors;
     controls?: CarouselControls;
@@ -44,16 +69,16 @@ export interface ImageSlide {
     src: string;
     alt: string;
     caption?: string;
-    title?: string; // New: for overlay text
-    description?: string; // New: for overlay text
+    title?: string;
+    description?: string;
 }
 
 export interface ImageCarouselProps extends BaseCarouselProps {
     images: ImageSlide[];
-    aspectRatio?: "16/9" | "4/3" | "1/1" | "3/2";
-    objectFit?: "cover" | "contain" | "fill";
-    overlayType?: ImageOverlayType; // New: text overlay options
-    showTextOverlay?: boolean; // New: enable/disable text overlay
+    aspectRatio?: '16/9' | '4/3' | '1/1' | '3/2';
+    objectFit?: 'cover' | 'contain' | 'fill';
+    overlayType?: ImageOverlayType;
+    showTextOverlay?: boolean;
 }
 
 // Enhanced Product Carousel
@@ -75,11 +100,11 @@ export interface ProductCarouselProps extends BaseCarouselProps {
     showRating?: boolean;
     showActions?: boolean;
     itemsPerView?: number;
-    layoutType?: ProductLayoutType; // New: scrollable vs grid
-    gridRows?: number; // New: number of rows in grid layout
+    layoutType?: ProductLayoutType;
+    gridRows?: number;
 }
 
-// Keep other interfaces same...
+// Testimonial Carousel
 export interface TestimonialSlide {
     id: string;
     content: string;
@@ -96,6 +121,7 @@ export interface TestimonialCarouselProps extends BaseCarouselProps {
     showRating?: boolean;
 }
 
+// Content Carousel
 export interface ContentSlide {
     id: string;
     title: string;
@@ -109,9 +135,10 @@ export interface ContentSlide {
 
 export interface ContentCarouselProps extends BaseCarouselProps {
     content: ContentSlide[];
-    layout?: "image-left" | "image-right" | "image-top";
+    layout?: 'image-left' | 'image-right' | 'image-top';
 }
 
+// Hero Carousel
 export interface HeroSlide {
     id: string;
     title: string;
@@ -131,17 +158,20 @@ export interface HeroCarouselProps extends BaseCarouselProps {
     overlayOpacity?: number;
 }
 
+// Single Item Carousel
 export interface SingleItemCarouselProps extends BaseCarouselProps {
     children: React.ReactNode[];
     fade?: boolean;
 }
 
+// Vertical Carousel
 export interface VerticalCarouselProps extends BaseCarouselProps {
     children: React.ReactNode[];
     height: string;
     itemHeight?: string;
 }
 
+// Multi Browse Carousel
 export interface MultiBrowseCarouselProps extends BaseCarouselProps {
     children: React.ReactNode[];
     itemsPerView: {
