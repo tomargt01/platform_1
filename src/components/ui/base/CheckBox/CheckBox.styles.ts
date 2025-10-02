@@ -1,77 +1,34 @@
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva, type VariantProps } from 'class-variance-authority';
 
-export const checkboxVariants = cva("", {
+export const checkboxVariants = cva('', {
     variants: {
         intent: {
-            primary: "text-[var(--primary)]",
-            secondary: "text-[var(--secondary)]",
-            ghost: "text-[var(--text)]",
-            destructive: "text-red-500",
-            success: "text-green-500 bg-green",
-            white: "text-white",
-            gray: "text-gray-500",
-            "theme-adaptive": "text-[var(--primary)]",
+            primary: 'text-[var(--primary)]',
+            secondary: 'text-[var(--secondary)]',
+            ghost: 'text-[var(--text)]',
+            destructive: 'text-[var(--destructive)]', // Add --destructive in globals.css
+            success: 'text-[var(--success)]',         // Add --success in globals.css
+            white: 'text-white',
+            gray: 'text-gray-500',
+            'theme-adaptive': 'text-[var(--primary)]',
         },
         variantSize: {
-            xs: "text-xs",
-            sm: "text-sm",
-            md: "text-base",
-            lg: "text-lg",
-        },
-        theme: {
-            light: `
-        --primary: #008000;
-        --secondary: #666666;
-        --background: #ffffff;
-        --border: #cccccc;
-        --text: #333333;
-      `,
-            dark: `
-        --primary: #1f2937;
-        --secondary: #bbbbbb;
-        --background: #1a1a1a;
-        --border: #444444;
-        --text: #cccccc;#1f2937
-      `,
-            purple: `
-        --primary: #800080;
-        --secondary: #d8bfd8;
-        --background: #ffffff;
-        --border: #a0522d;
-        --text: #4b0082;
-      `,
-            pink: `
-        --primary: #ff69b4;
-        --secondary: #ffb6c1;
-        --background: #ffffff;
-        --border: #c71585;
-        --text: #ff1493;
-      `,
-            green: `
-        --primary: #008000;
-        --secondary: #9acd32;
-        --background: #ffffff;
-        --border: #228b22;
-        --text: #006400;
-      `,
-            blue: `
-        --primary: #0000ff;
-        --secondary: #87ceeb;
-        --background: #ffffff;
-        --border: #1e90ff;
-        --text: #00008b;
-      `,
+            xs: 'text-xs px-[var(--pad8px)] py-[var(--pad4px)]', // Add --pad4px in globals.css
+            sm: 'text-sm px-[var(--pad8px)] py-[var(--pad6px)]', // Add --pad6px in globals.css
+            md: 'text-base px-[var(--pad12px)] py-[var(--pad8px)]',
+            lg: 'text-lg px-[var(--pad12px)] py-[var(--pad10px)]', // Add --pad10px in globals.css
+            xl: 'text-xl px-[var(--pad12px)] py-[var(--pad10px)]', // Add --pad10px in globals.css
+            xxl: 'text-xxl px-[var(--pad12px)] py-[var(--pad10px)]', // Add --pad10px in globals.css
         },
         type: {
-            standard: "",
-            toggle: "",
+            standard: 'rounded-[var(--radius4px)] border-[var(--1pxSolidBorder)] border-[var(--border)]',
+            toggle: 'rounded-full border-[var(--1pxSolidBorder)] border-[var(--border)]',
         },
     },
     defaultVariants: {
-        intent: "primary",
-        variantSize: "md",
-        theme: "light",
-        type: "standard",
+        intent: 'primary',
+        variantSize: 'md',
+        type: 'standard',
     },
 });
 

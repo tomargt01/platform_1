@@ -8,9 +8,8 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     (
         {
             className,
-            variantSize,
-            intent,
-            theme,
+            variantSize = "md",
+            intent = "primary",
             label,
             type = "standard",
             disabled = false,
@@ -26,27 +25,19 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     ) => {
         const isChecked = props.checked || false;
 
-        // Intent-specific colors
-        const getIntentColor = () => {
-            switch(intent) {
-                case 'success': return '#22c55e';
-                case 'destructive': return '#ef4444';
-                default: return circleColor || borderColor || "var(--primary)";
-            }
-        };
-
-        const intentColor = getIntentColor();
-        const effectivePrimary = borderColor || circleColor || "var(--primary)";
-        const effectiveBg = bgColor || "var(--primary)";
+        // Use global CSS variables or override with passed props
+        const effectiveBorderColor = borderColor || "var(--border)";
+        const effectiveCircleColor = circleColor || "var(--primary)";
+        const effectiveBgColor = bgColor || "var(--primary)";
 
         const contentClass = cn(
-            `text-[${intentColor}]`,
+            `${intent === 'primary' ? "text-[var(--primary)]" : "text-[var(--error)]"}`,
+            checkboxVariants({ intent, variantSize, type })
         );
 
         return (
             <label
                 className={cn(
-                    checkboxVariants({ intent, variantSize, theme, type }),
                     "inline-flex items-center space-x-2 rtl:space-x-reverse",
                     disabled && "opacity-50 cursor-not-allowed",
                     className
@@ -62,44 +53,43 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
                     onChange={props.onChange}
                     {...props}
                 />
+
                 <span
                     className={cn(
                         "relative flex items-center justify-center transition-all duration-200",
                         "h-6",
                         type === "standard" && "w-6 h-6 border rounded",
-                        type === "standard" && "bg-white",
+                        type === "standard" && "bg-[var(--lightBg)]",
                         type === "standard" &&
                         isChecked &&
-                        `peer-checked:bg-[${effectiveBg}] peer-checked:border-[${effectivePrimary}]`,
+                        "peer-checked:bg-[var(--secondary)] peer-checked:border-[var(--text)]",
                         type === "toggle" && "w-14 rounded-full border",
-                        type === "toggle" && "bg-white",
-                        type === "toggle" && "border-[var(--border-color)]",
-                        // Toggle background when checked
-                        type === "toggle" && isChecked && "peer-checked:bg-[var(--toggle-bg)]",
-                        // Circle styling - यहां main fix है
+                        type === "toggle" && "bg-[var(--lightBg)] border-[var(--border)]",
+                        type === "toggle" && isChecked && "peer-checked:bg-[var(--secondary)]",
                         type === "toggle" &&
                         "after:content-[''] after:w-4 after:h-4 after:rounded-full after:absolute after:left-1 after:top-1 after:transition-transform after:duration-200",
-                        // Circle background based on state
-                        type === "toggle" && !isChecked && "after:bg-[var(--circle-color)]",
-                        type === "toggle" && isChecked && "peer-checked:after:bg-white",
-                        // Circle position
-                        type === "toggle" && isChecked && "peer-checked:after:translate-x-[29.4px] after:-translate-y-[1px]",
+                        type === "toggle" && !isChecked && "after:bg-[var(--secondary)]",
+                        type === "toggle" && isChecked && "peer-checked:after:bg-[var(--lightBg)]",
+                        type === "toggle" &&
+                        isChecked &&
+                        "peer-checked:after:translate-x-[29.4px] after:-translate-y-[1px]",
                         type === "toggle" && !isChecked && "after:translate-x-0 after:-translate-y-[0.6px]"
                     )}
-                    style={{
-                        "--border-color": borderColor || "var(--border)",
-                        "--circle-color": intentColor, // ✅ Intent-based circle color
-                        "--toggle-bg": intent === 'success' ? '#22c55e' : intent === 'destructive' ? '#ef4444' : effectiveBg, // ✅ Intent-based background
-                    } as React.CSSProperties}
+                    style={
+                        {
+                            "--border-color": effectiveBorderColor,
+                            "--circle-color": effectiveCircleColor,
+                            "--toggle-bg": effectiveBgColor,
+                        } as React.CSSProperties
+                    }
                 >
                     {type === "standard" && isChecked && (
-                        <span className={cn(contentClass, "text-xs")}>✓</span>
+                        <span className={cn("text-xs", contentClass)}>&#10003;</span>
                     )}
                     {type === "toggle" && (
                         <span
                             className={cn(
-                                "absolute text-xs w-full flex justify-between px-1 z-10",
-                                "top-1/2 -translate-y-1/2",
+                                "absolute text-xs w-full flex justify-between px-1 z-10 top-1/2 -translate-y-1/2",
                                 contentClass
                             )}
                         >
@@ -121,11 +111,6 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
                             </span>
                         </span>
                     )}
-                    {checkedContent && (
-                        <span className={cn(contentClass, "ml-2 text-xs")}>
-                            {checkedContent}
-                        </span>
-                    )}
                 </span>
                 {label && <span className={contentClass}>{label}</span>}
             </label>
@@ -134,3 +119,5 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
 );
 
 Checkbox.displayName = "Checkbox";
+
+export default Checkbox;
