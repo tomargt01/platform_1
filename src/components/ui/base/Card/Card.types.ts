@@ -2,9 +2,8 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { ButtonProps } from "../Button";
 import { LucideIcon } from "lucide-react";
 
-export type Theme = "light" | "dark" | "purple" | "pink" | "green" | "blue";
 export type Size = "sm" | "md" | "lg";
-export type Intent = "default" | "outlined" | "elevated" | "count" | "two-row";
+export type Intent = "default" | "outlined" | "elevated" | "count" | "twoRow";
 
 export interface CardAction {
     label: string;
@@ -24,7 +23,6 @@ export interface CardLink {
 export interface CardProps extends ComponentPropsWithoutRef<"div"> {
     intent?: Intent;
     size?: Size;
-    theme?: Theme;
     title?: string;
     description?: string;
     imageSrc?: string;

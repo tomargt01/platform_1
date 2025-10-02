@@ -1,40 +1,70 @@
 'use client';
 import React from 'react';
 import ThemeSwitcher from '#/components/ThemeSwitcher';
-import { Calendar, Deadline, Event, Holiday } from '#/components/ui/base/Calendar';
+import { Card, CardAction, CardLink } from '#/components/ui/base/Card';
 
-const CalendarDashboardTest = () => {
-
-    const events: Event[] = [
-        { date: "2025-10-01", title: "Board Meeting" },
-        { date: "2025-10-15", title: "Training Session" },
-        { date: "2025-10-22", title: "Parent-Teacher" },
-        { date: "2025-10-10", title: "Gandhi Jayanti" },
+const CardDashboardTest = () => {
+    const actions: CardAction[]=[
+        { label: "Action 1", intent: "primary",size: 'sm', onClick: () => alert("Action 1") },
+        { label: "Action 2", intent: "secondary",size: 'sm', onClick: () => alert("Action 2")
+},
     ];
-
-    const deadlines: Deadline[] = [
-        { date: "2025-10-05", title: "Fee Submission" },
-        { date: "2025-10-18", title: "Exam Papers" },
-    ];
-
-    const holidays: Holiday[] = [
-        { date: "2025-10-10", name: "Gandhi Jayanti" },
-        { date: "2025-10-26", name: "Diwali" },
-    ];
-
-    return (
-        <div>
-            <h1 style={{ marginTop: 0 }}>Calendar Test Dashboard</h1>
-            <ThemeSwitcher />
-            <Calendar
-                events={events}
-                deadlines={deadlines}
-                holidays={holidays}
-                intent="primary"
-                columns={7}
-            />
-        </div>
-    );
+    const links: CardLink[] = [
+    { label: "Link 1", intent: "ghost", size: 'sm', onClick: () => alert("Link 1") },
+    { label: "Link 2", intent: "ghost", size: 'sm', onClick: () => alert("Link 2") },
+];
+return (
+    <div className="p-[var(--pad16px)] grid gap-[var(--margin16px)]">
+        <h1 className="color-[var(--text)]">Card Test Dashboard</h1>
+        <ThemeSwitcher />
+        {/* Default Card */}
+        <Card
+            intent="default"
+            title="Default Card"
+            description="This is a default card with global theme."
+            actions={actions}
+        />
+        {/* Outlined Card */}
+        <Card
+            intent="outlined"
+            title="Outlined Card"
+            description="This card has a primary color border."
+        />
+        {/* Elevated Card */}
+        <Card
+            intent="elevated"
+            title="Elevated Card"
+            description="This card has a large shadow."
+        />
+        {/* Count Card */}
+        <Card
+            intent="count"
+            title="Total Students"
+            count="1,250"
+        // icon={Users} // Uncomment when you have the icon
+        />
+        {/* Two Row Card */}
+        <Card
+            intent="twoRow"
+            title="Attendance Summary"
+            description="View detailed attendance reports."
+            links={links}
+            dataContent={<div className="color-[var(--text)]">Custom data here</div>}
+        />
+        {/* With Image */}
+        <Card
+            intent="default"
+            title="School Building"
+            description="Our beautiful school campus."
+            imageSrc="/images/school.jpg"
+            imageAlt="School Building"
+        />
+        {/* Different Sizes */}
+        <Card intent="default" size="sm" title="Small Card" description="Compact size." />
+        <Card intent="default" size="md" title="Medium Card" description="Standard size." />
+        <Card intent="default" size="lg" title="Large Card" description="Larger size." />
+    </div>
+);
 };
 
-export default CalendarDashboardTest;
+export default CardDashboardTest;

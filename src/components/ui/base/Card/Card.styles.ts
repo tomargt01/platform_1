@@ -1,34 +1,30 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
 export const cardVariants = cva(
-    "rounded-md bg-[var(--background)] border border-[var(--border)]",
+    `
+    rounded-[var(--radius8px)]
+    bg-[var(--background)]
+    [border:var(--1pxSolidBorder)_var(--borderColor)]
+    color-[var(--text)]
+`,
     {
         variants: {
             intent: {
-                default: "shadow-sm",
-                outlined: "border-2 border-[var(--primary)] shadow-none",
-                elevated: "shadow-lg",
-                count: "shadow-sm flex items-center",
-                "two-row": "shadow-sm",
+                default: "shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]",
+                outlined: "[border:var(--borderWidth)_solid_var(--primary)] shadow-none",
+                elevated: "shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)]",
+                count: "shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] flex items-center",
+                twoRow: "shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]",
             },
             size: {
-                sm: "w-64",
-                md: "w-80",
-                lg: "w-96",
-            },
-            theme: {
-                light: "",
-                dark: "",
-                purple: "",
-                pink: "",
-                green: "",
-                blue: "",
+                sm: "w-[256px]",
+                md: "w-[320px]",
+                lg: "w-[384px]",
             },
         },
         defaultVariants: {
             intent: "default",
             size: "md",
-            theme: "light",
         },
     }
 );
