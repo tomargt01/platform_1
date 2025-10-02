@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef } from "react";
-import type { Theme, Intent } from "../Button/Button.types";
+
+export type Intent = "primary" | "secondary" | "ghost" | "destructive";
 
 export interface Event {
     date: string | Date;
@@ -21,5 +22,4 @@ export interface CalendarProps extends ComponentPropsWithoutRef<"div"> {
     deadlines?: Deadline | Deadline[];
     holidays?: Holiday | Holiday[];
     intent?: Intent;
-    theme?: Theme;
 }
